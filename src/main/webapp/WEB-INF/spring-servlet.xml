@@ -12,7 +12,16 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
     <mvc:annotation-driven/>
     <context:component-scan base-package="com.college.student"/>
+
+    <bean id="studentRepositoryCSV" class="com.college.student.repository.impl.InCSVFileStudentRepositoryImpl"/>
+    <bean id="studentRepositoryDb" class="com.college.student.repository.impl.InDBRepositoryImplementation"/>
+    <bean id="studentRepositoryFile" class="com.college.student.repository.impl.InFileStudentRepositoryImpl"/>
+    <bean id="studentRepositoryInMemory" class="com.college.student.repository.impl.InMemoryStudentRepositoryImpl"/>
+
+    <bean id="studentRepositoryFactory" class="com.college.student.repository.factory.StudentRepositoryFactory"/>
+
     <bean id="studentService" class="com.college.student.service.impl.StudentServiceImpl">
         <constructor-arg value="db" type="java.lang.String"/>
+        <constructor-arg ref="studentRepositoryFactory"/>
     </bean>
 </beans>

@@ -12,6 +12,10 @@ public class InCSVFileStudentRepositoryImpl implements StudentRepository {
     private final String csvFilePath;
     private final File file;
     private final CSVReadAndWriter csvReadAndWriter;
+
+    public boolean accept(String storageType){
+        return storageType.equals("csv");
+    }
     public InCSVFileStudentRepositoryImpl() {
         csvFilePath = "C:\\Users\\chakr\\IdeaProjects\\CollegeAdministration\\Students.csv";
         file = new File(csvFilePath);

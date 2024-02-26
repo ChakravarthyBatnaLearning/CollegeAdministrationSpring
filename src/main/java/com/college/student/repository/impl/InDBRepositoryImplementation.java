@@ -13,6 +13,9 @@ import java.util.List;
 
 
 public class InDBRepositoryImplementation implements StudentRepository {
+    public boolean accept(String storageType){
+        return storageType.equals("db");
+    }
     @Override
     public List<Student> listStudents() {
         String query = "select * from student";

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 public class InMemoryStudentRepositoryImpl implements StudentRepository {
+    public boolean accept(String storageType){
+        return storageType.equals("inMemory");
+    }
     private List<Student> studentList = new ArrayList<>();
     @Override
     public void addStudent(Student student) {  //adding student in list;

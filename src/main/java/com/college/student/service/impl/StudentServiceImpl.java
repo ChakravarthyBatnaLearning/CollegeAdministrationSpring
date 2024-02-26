@@ -12,8 +12,11 @@ import java.util.List;
 public class StudentServiceImpl implements com.college.student.service.StudentService {
 
     private final StudentRepository studentRepository;
-    public StudentServiceImpl(String storageType) {
-        this.studentRepository = StudentRepositoryFactory.getStudentRepositoryInstance(storageType);
+
+    private StudentRepositoryFactory studentRepositoryFactory;
+    public StudentServiceImpl(String storageType,StudentRepositoryFactory studentRepositoryFactory) {
+        this.studentRepositoryFactory = studentRepositoryFactory;
+        this.studentRepository = this.studentRepositoryFactory.getStudentRepositoryInstance(storageType);
     }
 
     public void addStudent(Student student) {

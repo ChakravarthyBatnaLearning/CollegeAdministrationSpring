@@ -9,6 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 //this is concreate products; this implements the product(StudentRepository) method;
 public class InFileStudentRepositoryImpl implements StudentRepository {
+    public boolean accept(String storageType){
+        return storageType.equals("inFile");
+    }
     private final FileUtils<Student> fileUtils;
     public InFileStudentRepositoryImpl() {
         File file = new File("C:\\Users\\chakr\\IdeaProjects\\CollegeAdministration\\Student.txt");

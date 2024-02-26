@@ -13,4 +13,5 @@ public interface StudentRepository {
     //update specific student by rollNo from list
     Student getStudentData(int studentRollNo);  //to get specific student data by rollNo;
     boolean isExist(int rollNo);
+    public boolean accept(String storageType);
 }
