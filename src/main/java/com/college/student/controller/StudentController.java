@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,16 +20,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:8084")
 // ctrl + alt + O to remove unused imports
 @Controller
 @RequestMapping("/student")
-public class StudentController  {
+public class StudentController {
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
-    @Autowired
-    private StudentService studentService;
+    private final StudentService studentService;
 
-    @PostMapping("/post")
+    public  StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @PostMapping()
     public void addStudentData(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession userSession = request.getSession(false);
         String cookieValue = HttpUtil.getCookieByName("my_auth_cookie", request);
@@ -72,38 +75,23 @@ public class StudentController  {
         response.getWriter().flush();
     }
 
-    @GetMapping("/get")
-    public void getStudentData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @GetMapping("/{rollNo}")
+    public void getStudentData(HttpServletRequest request, HttpServletResponse response, @PathVariable String rollNo) throws IOException {
         logger.info("Request Received to Get the Student Details");
-        String rollNo = request.getParameter("rollNo");
+      //  String rollNo = request.getParameter("rollNo");
         String jsonResponse = null;
         Gson gson = new Gson();
-        if (rollNo != null) {
-            logger.info("rollNo received {}", rollNo);
-            logger.info("User name : {}", request.getSession(false).getAttribute("username"));
-            try {
-                Student student = studentService.getStudentByRollNo(Integer.parseInt(rollNo));
-                logger.info("Student Details Received : {}", student);
-                EventHandler.getInstance(false).publishEvent(new GetStudentEvent(this.getClass(), student));
-                jsonResponse = gson.toJson(student);
-            } catch (Exception e) {
-                logger.error("Exception Occurred while Requested to Get Student data : ", e);
-                ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
-                jsonResponse = gson.toJson(errorResponse);
-            }
-        } else {
-            logger.info("Request Received to List All Students");
-            try {
-                List<Student> studentList = studentService.listStudents();
-                logger.info("Student List Received : {}", studentList);
-                EventHandler.getInstance(true).publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
-                jsonResponse = gson.toJson(studentList);
-                logger.info("Student List Converted to json : {}", jsonResponse);
-            } catch (Exception e) {
-                logger.error("Exception Occurred while Requesting the to List Student Data : ", e);
-                ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
-                jsonResponse = gson.toJson(errorResponse);
-            }
+        logger.info("rollNo received {}", rollNo);
+        logger.info("User name : {}", request.getSession(false).getAttribute("username"));
+        try {
+            Student student = studentService.getStudentByRollNo(Integer.parseInt(rollNo));
+            logger.info("Student Details Received : {}", student);
+            EventHandler.getInstance(false).publishEvent(new GetStudentEvent(this.getClass(), student));
+            jsonResponse = gson.toJson(student);
+        } catch (Exception e) {
+            logger.error("Exception Occurred while Requested to Get Student data : ", e);
+            ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
+            jsonResponse = gson.toJson(errorResponse);
         }
 
         PrintWriter out = response.getWriter();
@@ -112,7 +100,33 @@ public class StudentController  {
         logger.info("Response Successfully Generated");
     }
 
-    @PutMapping("/put")
+    @GetMapping()
+    public void getStudentList(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        logger.info("Request Received to Get the Student Details");
+        String jsonResponse = null;
+        Gson gson = new Gson();
+
+        logger.info("Request Received to List All Students");
+        try {
+            List<Student> studentList = studentService.listStudents();
+            logger.info("Student List Received : {}", studentList);
+            EventHandler.getInstance(true).publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
+            jsonResponse = gson.toJson(studentList);
+            logger.info("Student List Converted to json : {}", jsonResponse);
+        } catch (Exception e) {
+            logger.error("Exception Occurred while Requesting the to List Student Data : ", e);
+            ErrorResponse errorResponse = new ErrorResponse(500, e.getMessage());
+            jsonResponse = gson.toJson(errorResponse);
+        }
+
+
+        PrintWriter out = response.getWriter();
+        out.print(jsonResponse);
+        out.flush();
+        logger.info("Response Successfully Generated");
+    }
+
+    @PutMapping()
     public void updateStudentData(HttpServletRequest request, HttpServletResponse response) throws IOException {
         logger.info("Request Received to Update the Student Data");
         Gson gson = new Gson();
@@ -145,7 +159,7 @@ public class StudentController  {
         logger.info("Request for Update Student Successfully Completed");
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping()
     public void deleteStudentData(HttpServletRequest request, HttpServletResponse response) throws IOException, JsonSyntaxException {
         logger.info("Request to Delete Student Received");
         Gson gson = new Gson();

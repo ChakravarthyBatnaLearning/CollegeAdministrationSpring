@@ -28,7 +28,7 @@ public class LoginServlet  {
     private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
 
 @PostMapping("/login")
-    public void loginUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void authenticateUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         logger.info("Login Request Received");
         ErrorResponse errorResponse = null;
         try {
@@ -70,7 +70,7 @@ public class LoginServlet  {
     }
 
     @GetMapping("/login")
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void getUserName(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String cookieValue = HttpUtil.getCookieByName("my_auth_cookie", request);
         logger.info("Value for my_auth_cookie : {}", cookieValue);
         if (cookieValue != null && CookieHolder.getUserEntity(cookieValue) != null) {

@@ -59,7 +59,7 @@
         })
         .catch(error => console.error('Error fetching JSON data:', error));
 
-    fetch(`http://localhost:8084/CollegeAdministrationSpring/api/student/get?rollNo=${rollNo}`,{ method :'get'})
+    fetch(`http://localhost:8084/CollegeAdministrationSpring/api/student/${rollNo}`,{ method :'get'})
         .then(response => response.json())
         .then(data => {
             document.getElementById('name').value = data.name;

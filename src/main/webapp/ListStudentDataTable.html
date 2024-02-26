@@ -54,7 +54,7 @@
 <div id="student-list"></div>
 <!-- call login servlet --> <!-- and display the userName right-top-->
 <script>
-    fetch('http://localhost:8084/CollegeAdministrationSpring/api/student/get')
+    fetch('http://localhost:8084/CollegeAdministrationSpring/api/student')
         .then(response => response.json())  //get json data from the server's response
         .then(data => {//actual json data we received from the server
             console.log(data);

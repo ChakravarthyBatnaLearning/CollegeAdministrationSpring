@@ -64,7 +64,7 @@
         const studentData = new FormData(formData);
         // this creates a js object
         const data = Object.fromEntries(studentData);
-        fetch('http://localhost:8084/CollegeAdministrationSpring/api/student/post', {
+        fetch('http://localhost:8084/CollegeAdministrationSpring/api/student', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'

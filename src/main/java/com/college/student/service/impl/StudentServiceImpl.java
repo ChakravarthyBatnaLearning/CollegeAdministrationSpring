@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class StudentServiceImpl implements com.college.student.service.StudentService {
 
     private final StudentRepository studentRepository;

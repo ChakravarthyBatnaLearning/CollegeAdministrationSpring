@@ -43,7 +43,7 @@
             document.getElementById('userNameDisplay').innerText = ` Welcome : ${data.userName}`;
         })
         .catch(error => console.error('Error fetching JSON data:', error));
-    fetch(`http://localhost:8084/CollegeAdministrationSpring/api/student/get?rollNo=${rollNo}`, {
+    fetch(`http://localhost:8084/CollegeAdministrationSpring/api/student/${rollNo}`, {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'

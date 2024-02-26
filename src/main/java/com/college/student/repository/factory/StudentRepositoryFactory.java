@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 //this is factory
-@Repository
 public class StudentRepositoryFactory {
     private static StudentRepository studentRepository;
     private static final Map<String,StudentRepository> map = new HashMap<>();
