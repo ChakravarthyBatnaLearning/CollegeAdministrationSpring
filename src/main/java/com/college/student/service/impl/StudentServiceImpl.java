@@ -13,10 +13,8 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
 
     private final StudentRepository studentRepository;
 
-    private StudentRepositoryFactory studentRepositoryFactory;
     public StudentServiceImpl(String storageType,StudentRepositoryFactory studentRepositoryFactory) {
-        this.studentRepositoryFactory = studentRepositoryFactory;
-        this.studentRepository = this.studentRepositoryFactory.getStudentRepositoryInstance(storageType);
+        this.studentRepository = studentRepositoryFactory.getStudentRepositoryInstance(storageType);
     }
 
     public void addStudent(Student student) {

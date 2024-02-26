@@ -75,7 +75,7 @@
         const studentData = new FormData(formData);
         const data = Object.fromEntries(studentData);
         data.rollNo = rollNo;
-        fetch('http://localhost:8084/CollegeAdministrationSpring/api/student/put', {
+        fetch('http://localhost:8084/CollegeAdministrationSpring/api/student', {
             method: 'put',
             headers: {
                 'Content-Type': 'application/json'

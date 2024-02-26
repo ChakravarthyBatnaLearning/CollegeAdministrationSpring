@@ -35,10 +35,8 @@ public class InMemoryStudentRepositoryImpl implements StudentRepository {
 
     @Override
     public Student updateStudentByRollNo(Student updateStudent) {
-        Iterator<Student> iterator = studentList.iterator();
-        while (iterator.hasNext()) {
-            Student student = iterator.next();
-            if(student.getRollNo() == updateStudent.getRollNo()) {
+        for (Student student : studentList) {
+            if (student.getRollNo() == updateStudent.getRollNo()) {
                 student.setRollNo(updateStudent.getRollNo());
                 student.setName(updateStudent.getName());
                 student.setAge(updateStudent.getAge());
