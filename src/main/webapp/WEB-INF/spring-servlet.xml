@@ -21,7 +21,7 @@
     <bean id="studentRepositoryFactory" class="com.college.student.repository.factory.StudentRepositoryFactory"/>
 
     <bean id="studentService" class="com.college.student.service.impl.StudentServiceImpl">
-        <constructor-arg value="db" type="java.lang.String"/>
+        <constructor-arg value="DB" type="com.college.student.storagetype.StorageType"/>
         <constructor-arg ref="studentRepositoryFactory"/>
     </bean>
 </beans>

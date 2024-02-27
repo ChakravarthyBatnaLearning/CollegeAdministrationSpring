@@ -10,6 +10,7 @@ public class Student implements Serializable {
     private String name;
     private byte age;
     private long phoneNo;
+    private String gender;
 
     public int getRollNo() {
         return this.rollNo;
@@ -41,6 +42,14 @@ public class Student implements Serializable {
 
     public void setPhoneNo(long phoneNo) {
         this.phoneNo = phoneNo;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @Override

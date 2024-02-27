@@ -2,15 +2,16 @@ package com.college.student.repository.impl;
 
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
+import com.college.student.storagetype.StorageType;
 import com.college.student.utils.FileUtils;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
-//this is concreate products; this implements the product(StudentRepository) method;
+//this is concrete products; this implements the product(StudentRepository) method;
 public class InFileStudentRepositoryImpl implements StudentRepository {
-    public boolean accept(String storageType){
-        return storageType.equals("inFile");
+    public boolean accept(StorageType storageType){
+        return storageType == StorageType.FILE;
     }
     private final FileUtils<Student> fileUtils;
     public InFileStudentRepositoryImpl() {
@@ -56,6 +57,7 @@ public class InFileStudentRepositoryImpl implements StudentRepository {
                 student.setName(updateStudent.getName());
                 student.setAge(updateStudent.getAge());
                 student.setPhoneNo(updateStudent.getPhoneNo());  //after updating all the values will add the new list to the file again;
+                student.setGender(updateStudent.getGender());
                 this.fileUtils.writeObject(studentList);
                 return student;
             }

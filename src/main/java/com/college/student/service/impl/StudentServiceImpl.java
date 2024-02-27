@@ -4,6 +4,7 @@ package com.college.student.service.impl;
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
 import com.college.student.repository.factory.StudentRepositoryFactory;
+import com.college.student.storagetype.StorageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
 
     private final StudentRepository studentRepository;
 
-    public StudentServiceImpl(String storageType,StudentRepositoryFactory studentRepositoryFactory) {
+    public StudentServiceImpl(StorageType storageType, StudentRepositoryFactory studentRepositoryFactory) {
         this.studentRepository = studentRepositoryFactory.getStudentRepositoryInstance(storageType);
     }
 

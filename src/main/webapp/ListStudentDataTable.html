@@ -75,6 +75,7 @@
                     <th>Name</th>
                     <th>Age</th>
                     <th>PhoneNo</th>
+                    <th>Gender</th>
                     <th>Actions</th>
                 `;
             thead.appendChild(headerRow);
@@ -89,6 +90,7 @@
                         <td>${student.name}</td>
                         <td>${student.age}</td>
                         <td>${student.phoneNo}</td>
+                        <td>${student.gender}</td>
                          <td>
         <a href="UpdateStudentData.html?rollNo=${student.rollNo}">Edit</a> |
        <a href="#" class="delete-link" data-rollno="${student.rollNo}" data-name="${student.name}" data-age="${student.age}" data-phoneNo="${student.phoneNo}"">Delete</a> |

@@ -14,7 +14,7 @@ public class CSVReadAndWriter {
     public void writeHeadings() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(this.file,true));
-            writer.write("RollNo, " + "Name, " + " Age, " + "PhoneNo");
+            writer.write("RollNo, " + "Name, " + " Age, " + "PhoneNo" + "gender");
         } catch (IOException i) {
             i.printStackTrace();
         }
@@ -32,6 +32,7 @@ public class CSVReadAndWriter {
                 student.setName(filed[1]);
                 student.setAge(Byte.parseByte(filed[2]));
                 student.setPhoneNo(Long.parseLong(filed[3]));
+                student.setGender(filed[4]);
                 studentList.add(student);
             }
         } catch (IOException i) {
@@ -43,7 +44,7 @@ public class CSVReadAndWriter {
     public void writeStudent(Student student) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(this.file,true));
-            String line = String.format("%d,%s,%d,%d",student.getRollNo(),student.getName(),(int)student.getAge(),(int)student.getPhoneNo());
+            String line = String.format("%d,%s,%d,%d,%s",student.getRollNo(),student.getName(),(int)student.getAge(),(int)student.getPhoneNo(),student.getGender());
             writer.write(line + "\n");
             writer.flush();
         } catch (IOException i) {
@@ -128,6 +129,7 @@ public class CSVReadAndWriter {
                     student.setName(filed[1]);
                     student.setAge(Byte.parseByte(filed[2]));
                     student.setPhoneNo(Long.parseLong(filed[3]));
+                    student.setGender(filed[4]);
                     return student;
                 }
             }

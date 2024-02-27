@@ -2,6 +2,7 @@ package com.college.student.repository.impl;
 
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
+import com.college.student.storagetype.StorageType;
 import com.college.student.utils.CSVReadAndWriter;
 
 import java.io.File;
@@ -13,8 +14,8 @@ public class InCSVFileStudentRepositoryImpl implements StudentRepository {
     private final File file;
     private final CSVReadAndWriter csvReadAndWriter;
 
-    public boolean accept(String storageType){
-        return storageType.equals("csv");
+    public boolean accept(StorageType storageType){
+        return storageType == StorageType.CSV;
     }
     public InCSVFileStudentRepositoryImpl() {
         csvFilePath = "C:\\Users\\chakr\\IdeaProjects\\CollegeAdministration\\Students.csv";

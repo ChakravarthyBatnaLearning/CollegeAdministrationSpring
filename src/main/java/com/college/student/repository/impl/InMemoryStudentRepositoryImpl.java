@@ -2,13 +2,14 @@ package com.college.student.repository.impl;
 
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
+import com.college.student.storagetype.StorageType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 public class InMemoryStudentRepositoryImpl implements StudentRepository {
-    public boolean accept(String storageType){
-        return storageType.equals("inMemory");
+    public boolean accept(StorageType storageType){
+        return storageType == StorageType.IN_MEMORY;
     }
     private List<Student> studentList = new ArrayList<>();
     @Override
@@ -41,6 +42,7 @@ public class InMemoryStudentRepositoryImpl implements StudentRepository {
                 student.setName(updateStudent.getName());
                 student.setAge(updateStudent.getAge());
                 student.setPhoneNo(updateStudent.getPhoneNo());
+                student.setGender(updateStudent.getGender());
                 return student;
             }
         }

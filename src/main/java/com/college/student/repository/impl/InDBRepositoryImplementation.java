@@ -2,6 +2,7 @@ package com.college.student.repository.impl;
 
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
+import com.college.student.storagetype.StorageType;
 import com.college.student.utils.DBConnector;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +14,8 @@ import java.util.List;
 
 
 public class InDBRepositoryImplementation implements StudentRepository {
-    public boolean accept(String storageType){
-        return storageType.equals("db");
+    public boolean accept(StorageType storageType){
+        return storageType == StorageType.DB;
     }
     @Override
     public List<Student> listStudents() {
@@ -29,6 +30,7 @@ public class InDBRepositoryImplementation implements StudentRepository {
                 student.setName(resultset.getString("name"));
                 student.setAge(resultset.getByte(3));
                 student.setPhoneNo(resultset.getLong(4));
+                student.setGender(resultset.getString(5));
                 studentList.add(student);
             }
         } catch (SQLException e) {
@@ -40,13 +42,14 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public void addStudent(@org.jetbrains.annotations.NotNull Student student) {
-        String query = "insert into student values(?,?,?,?)";
+        String query = "insert into student values(?,?,?,?,?)";
         try {
             PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(query);
             preparedStatement.setInt(1,student.getRollNo());
             preparedStatement.setString(2,student.getName());
             preparedStatement.setByte(3,student.getAge());
             preparedStatement.setLong(4,student.getPhoneNo());
+            preparedStatement.setString(5,student.getGender());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -67,6 +70,7 @@ public class InDBRepositoryImplementation implements StudentRepository {
                 student.setName(resultSet.getString(2));
                 student.setAge(resultSet.getByte(3));
                 student.setPhoneNo(resultSet.getLong(4));
+                student.setGender(resultSet.getString(5));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,13 +87,14 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public Student updateStudentByRollNo(Student student) {
-        String query = "update student set name = ?, age = ?, phoneNumber = ? where rollNo = ?";
+        String query = "update student set name = ?, age = ?, phoneNumber = ?, GENDER = ? where rollNo = ?";
         try {
             PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(query);
             preparedStatement.setString(1,student.getName());
             preparedStatement.setByte(2,student.getAge());
             preparedStatement.setLong(3,student.getPhoneNo());
             preparedStatement.setInt(4,student.getRollNo());
+            preparedStatement.setString(5,student.getGender());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,6 +115,7 @@ public class InDBRepositoryImplementation implements StudentRepository {
                 student.setName(resultSet.getString(2));
                 student.setAge(resultSet.getByte(3));
                 student.setPhoneNo(resultSet.getLong(4));
+                student.setGender(resultSet.getString(5));
                 return student;
             }
         } catch (SQLException e) {

@@ -1,6 +1,7 @@
 package com.college.student.repository;
 
 import com.college.student.pojo.Student;
+import com.college.student.storagetype.StorageType;
 
 import java.util.List;
 //this is product interface
@@ -13,5 +14,5 @@ public interface StudentRepository {
     //update specific student by rollNo from list
     Student getStudentData(int studentRollNo);  //to get specific student data by rollNo;
     boolean isExist(int rollNo);
-    public boolean accept(String storageType);
+    public boolean accept(StorageType storageType);
 }

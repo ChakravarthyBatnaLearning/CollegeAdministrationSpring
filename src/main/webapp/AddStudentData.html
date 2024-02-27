@@ -42,6 +42,13 @@
     <input type="number" id="age" name="age" required><br><br>
     <label for="phoneNo">Student Phone Number:</label>
     <input type="tel" id="phoneNo" name="phoneNo" required><br><br>
+    <!-- Add a dropdown menu for selecting gender -->
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+        <option value="MALE">Male</option>
+        <option value="FEMALE">Female</option>
+        <option value="OTHER">Other</option>
+    </select><br><br>
     <input type="submit" value="Add Student">
 </form>
 <script>
@@ -91,6 +98,7 @@
 <th>Name</th>
 <th>Age</th>
 <th>PhoneNo</th>
+<th>Gender</th>
 </tr>
 </thead>
 <tbody>
@@ -99,6 +107,7 @@
 <td>${data.name}</td>
 <td>${data.age}</td>
 <td>${data.phoneNo}</td>
+<td>${data.gender}</td>
 </tr>
 </tbody>
 </table>
