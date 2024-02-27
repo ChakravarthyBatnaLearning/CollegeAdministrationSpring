@@ -23,7 +23,7 @@
         <!-- what to log -->
         <!-- Root logger -->
         <Root level="debug">
-            <!-- Reference the Console and File appenders -->
+            <!-- Reference the Console and File appends -->
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Root>

@@ -54,15 +54,17 @@ public class StudentController {
 
     @GetMapping("/{rollNo}")
     @ResponseBody
-    public Student getStudentData(HttpServletRequest request, HttpServletResponse response, @PathVariable String rollNo) throws Exception {
+    public Student getStudentData(HttpServletRequest request, @PathVariable String rollNo) throws Exception {
         Student student = null;
         logger.info("Request Received to Get the Student Details");
         logger.info("rollNo received {}", rollNo);
         logger.info("User name : {}", request.getSession(false).getAttribute("username"));
         try {
             student = studentService.getStudentByRollNo(Integer.parseInt(rollNo));
-            if (student == null)
+            if (student == null) {
+                logger.error("Exception Occurred  while Requested to Get Student data : ");
                 throw new StudentNotFoundException("Student with RollNo : " + rollNo + " Not Found", HttpServletResponse.SC_NOT_FOUND);
+            }
             logger.info("Student Details Received : {}", student);
             EventHandler.getInstance(false).publishEvent(new GetStudentEvent(this.getClass(), student));
         } catch (StudentNotFoundException e) {
