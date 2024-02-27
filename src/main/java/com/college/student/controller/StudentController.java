@@ -2,6 +2,7 @@ package com.college.student.controller;
 
 import com.college.student.event.handler.EventHandler;
 import com.college.student.event.impl.*;
+import com.college.student.exception.*;
 import com.college.student.pojo.Student;
 import com.college.student.service.StudentService;
 import com.college.student.utils.HttpUtil;
@@ -31,7 +32,7 @@ public class StudentController {
 
     @PostMapping()
     @ResponseBody
-    public Student addStudentData(@RequestBody Student student, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public Student addStudentData(@RequestBody Student student, HttpServletRequest request, HttpServletResponse response) throws IOException, InterruptedException {
         HttpSession userSession = request.getSession(false);
         String cookieValue = HttpUtil.getCookieByName("my_auth_cookie", request);
         if (userSession.getAttribute(cookieValue) != null) {
@@ -43,9 +44,9 @@ public class StudentController {
                 studentService.addStudent(student);
                 EventHandler.getInstance(true).publishEvent(new AddStudentEvent(this.getClass(), student));  // publish the event
                 logger.info("Added Student to DB");
-            } catch (Exception e) {
+            } catch (AddStudentException | InterruptedException e) {
                 logger.error("Exception Occurred while Added Student : ", e);
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                throw e;
             }
         }
         return student;
@@ -53,18 +54,20 @@ public class StudentController {
 
     @GetMapping("/{rollNo}")
     @ResponseBody
-    public Student getStudentData(HttpServletRequest request, HttpServletResponse response, @PathVariable String rollNo) throws IOException {
+    public Student getStudentData(HttpServletRequest request, HttpServletResponse response, @PathVariable String rollNo) throws Exception {
         Student student = null;
         logger.info("Request Received to Get the Student Details");
         logger.info("rollNo received {}", rollNo);
         logger.info("User name : {}", request.getSession(false).getAttribute("username"));
         try {
             student = studentService.getStudentByRollNo(Integer.parseInt(rollNo));
+            if (student == null)
+                throw new StudentNotFoundException("Student with RollNo : " + rollNo + " Not Found", HttpServletResponse.SC_NOT_FOUND);
             logger.info("Student Details Received : {}", student);
             EventHandler.getInstance(false).publishEvent(new GetStudentEvent(this.getClass(), student));
-        } catch (Exception e) {
+        } catch (StudentNotFoundException e) {
             logger.error("Exception Occurred while Requested to Get Student data : ", e);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw e;
         }
         return student;
 
@@ -72,35 +75,39 @@ public class StudentController {
 
     @GetMapping()
     @ResponseBody
-    public List<Student> getStudentList(HttpServletResponse response) {
+    public List<Student> getStudentList(HttpServletResponse response) throws InterruptedException {
         logger.info("Request Received to Get the Student Details");
         List<Student> studentList = null;
         logger.info("Request Received to List All Students");
         try {
             studentList = studentService.listStudents();
+            if (studentList == null)
+                throw new StudentListNotFoundException("No Students Are Found", HttpServletResponse.SC_NOT_FOUND);
             logger.info("Student List Received : {}", studentList);
             EventHandler.getInstance(true).publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
             logger.info("Student List  : {}", studentList);
-        } catch (Exception e) {
+        } catch (StudentListNotFoundException | InterruptedException e) {
             logger.error("Exception Occurred while Requesting the to List Student Data : ", e);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw e;
         }
         return studentList;
     }
 
     @PutMapping()
     @ResponseBody
-    public Student updateStudentData(@RequestBody Student student, HttpServletResponse response) {
+    public Student updateStudentData(@RequestBody Student student, HttpServletResponse response) throws InterruptedException {
         logger.info("Request Received to Update the Student Data");
 
         try {
             logger.info("Request to Update the Student : {}", student);
             student = studentService.updateStudentDetailsByRollNo(student);
+            if (student == null)
+                throw new StudentUpdateException("Error While Updating the Student", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.info("Request Successfully Completed for Update for Student {}", student);
             EventHandler.getInstance(false).publishEvent(new UpdateStudentEvent(this.getClass(), student));
-        } catch (Exception e) {
+        } catch (StudentUpdateException | InterruptedException e) {
             logger.error("Exception Occurred while Updating the StudentByRollNo : ", e);
-            response.setStatus(500);
+            throw e;
         }
         logger.info("Request for Update Student Successfully Completed");
         return student;
@@ -108,17 +115,17 @@ public class StudentController {
 
     @DeleteMapping("/{rollNo}")
     @ResponseBody
-    public String deleteStudentData(@PathVariable String rollNo, HttpServletResponse response) throws JsonSyntaxException {
+    public String deleteStudentData(@PathVariable String rollNo, HttpServletResponse response) throws JsonSyntaxException, InterruptedException {
         logger.info("Request to Delete Student Received");
         try {
             logger.info("Successfully Received Student RollNo : {}", Integer.parseInt(rollNo));
             Student student = studentService.deleteStudentByRollNo(Integer.parseInt(rollNo));
+            if (student == null) throw new DeleteStudentException("Error While Deleting Student", 500);
             logger.info("Successfully Deleted the Student : {}", student);
             EventHandler.getInstance(false).publishEvent(new DeleteStudentEvent(this.getClass(), student));
-        } catch (Exception e) {
+        } catch (DeleteStudentException | InterruptedException e) {
             logger.info("Exception Occurred while Deleting a Student having rollNo : {} and Exception : ", Integer.parseInt(rollNo), e);
-            response.setStatus(500);
-
+            throw e;
         }
         return rollNo;
     }

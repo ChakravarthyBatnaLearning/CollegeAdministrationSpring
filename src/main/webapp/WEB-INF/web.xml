@@ -31,14 +31,14 @@
 <!--        <url-pattern>/login</url-pattern>-->
 <!--    </servlet-mapping>-->
 
-    <filter>
-        <filter-name>loginFilter</filter-name>
-        <filter-class>com.college.student.login.AuthenticationFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>loginFilter</filter-name>
-        <url-pattern>/api/student/*</url-pattern>
-    </filter-mapping>
+<!--    <filter>-->
+<!--        <filter-name>loginFilter</filter-name>-->
+<!--        <filter-class>com.college.student.login.AuthenticationFilter</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>loginFilter</filter-name>-->
+<!--        <url-pattern>/api/student/*</url-pattern>-->
+<!--    </filter-mapping>-->
 
 
 
