@@ -12,7 +12,6 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
     <mvc:annotation-driven/>
     <context:component-scan base-package="com.college.student"/>
-
     <bean id="studentRepositoryCSV" class="com.college.student.repository.impl.InCSVFileStudentRepositoryImpl"/>
     <bean id="studentRepositoryDb" class="com.college.student.repository.impl.InDBRepositoryImplementation"/>
     <bean id="studentRepositoryFile" class="com.college.student.repository.impl.InFileStudentRepositoryImpl"/>
@@ -24,4 +23,9 @@
         <constructor-arg value="DB" type="com.college.student.storagetype.StorageType"/>
         <constructor-arg ref="studentRepositoryFactory"/>
     </bean>
+    <bean id="getStudentEventListener" class="com.college.student.listener.impl.GetStudentEventListener"/>
+    <bean id="addStudentEventListener" class="com.college.student.listener.impl.AddStudentEventListener"/>
+    <bean id="deleteStudentEventListener" class="com.college.student.listener.impl.DeleteStudentEventListener"/>
+    <bean id="updateStudentEventListener" class="com.college.student.listener.impl.UpdateStudentEventListener"/>
+    <bean id="getAllStudentEventListener" class="com.college.student.listener.impl.GetAllStudentEventListener"/>
 </beans>
