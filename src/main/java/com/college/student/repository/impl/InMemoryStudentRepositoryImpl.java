@@ -2,7 +2,7 @@ package com.college.student.repository.impl;
 
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
-import com.college.student.storagetype.StorageType;
+import com.college.student.constant.StorageType;
 
 import java.util.ArrayList;
 import java.util.Iterator;

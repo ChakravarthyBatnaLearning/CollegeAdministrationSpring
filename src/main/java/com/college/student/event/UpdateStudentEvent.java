@@ -1,16 +1,15 @@
-package com.college.student.event.impl;
+package com.college.student.event;
 
-import com.college.student.event.IEvent;
 import com.college.student.pojo.Student;
 import org.springframework.context.ApplicationEvent;
 
-public class AddStudentEvent extends ApplicationEvent implements IEvent {
-    private Object source;
+public class UpdateStudentEvent extends ApplicationEvent {
     private Student student;
-    public AddStudentEvent(Object source,Student student) {
+    private Object source;
+    public UpdateStudentEvent(Object source, Student student) {
         super(source);
-        this.student = student;
         this.source = source;
+        this.student = student;
     }
 
     public Student getStudent() {

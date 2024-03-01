@@ -1,7 +1,6 @@
-package com.college.student.listener.impl;
+package com.college.student.listener;
 
-import com.college.student.event.impl.GetAllStudentEvent;
-import com.college.student.listener.IEventListener;
+import com.college.student.event.GetAllStudentEvent;
 import com.college.student.pojo.Student;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,7 @@ import org.springframework.context.ApplicationListener;
 
 import java.util.List;
 
-public class GetAllStudentEventListener implements IEventListener<GetAllStudentEvent> , ApplicationListener<GetAllStudentEvent> {
+public class GetAllStudentEventListener implements ApplicationListener<GetAllStudentEvent> {
     private static final Logger logger = LoggerFactory.getLogger(GetAllStudentEventListener.class);
 
 

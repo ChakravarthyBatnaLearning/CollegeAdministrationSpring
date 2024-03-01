@@ -1,12 +1,11 @@
-package com.college.student.event.impl;
+package com.college.student.event;
 
-import com.college.student.event.IEvent;
 import com.college.student.pojo.Student;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.List;
 
-public class GetAllStudentEvent extends ApplicationEvent implements IEvent {
+public class GetAllStudentEvent extends ApplicationEvent {
     private List<Student> studentList;
     private Object source;
 

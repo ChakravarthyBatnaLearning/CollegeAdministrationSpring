@@ -1,4 +1,4 @@
-package com.college.student.gender;
+package com.college.student.constant;
 
 public enum Gender {
     MALE,

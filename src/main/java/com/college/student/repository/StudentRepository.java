@@ -1,7 +1,7 @@
 package com.college.student.repository;
 
 import com.college.student.pojo.Student;
-import com.college.student.storagetype.StorageType;
+import com.college.student.constant.StorageType;
 
 import java.util.List;
 //this is product interface

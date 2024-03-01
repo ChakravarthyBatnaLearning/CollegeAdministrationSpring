@@ -4,9 +4,7 @@ package com.college.student.service.impl;
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
 import com.college.student.repository.factory.StudentRepositoryFactory;
-import com.college.student.storagetype.StorageType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.college.student.constant.StorageType;
 
 import java.util.List;
 

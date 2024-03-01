@@ -12,18 +12,18 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
     <mvc:annotation-driven/>
     <context:component-scan base-package="com.college.student"/>
+
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://127.0.0.1:3306/collegeadministration"/>
         <property name="username" value="root"/>
         <property name="password" value="Chakri@1234"/>
     </bean>
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <bean id="jdbc" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="inDBRepositoryImplementation2" class="com.college.student.repository.impl.InDBRepositoryImplementation">
 
-    </bean>
+
     <bean id="studentRepositoryCSV" class="com.college.student.repository.impl.InCSVFileStudentRepositoryImpl"/>
     <bean id="studentRepositoryDb" class="com.college.student.repository.impl.InDBRepositoryImplementation"/>
     <bean id="studentRepositoryFile" class="com.college.student.repository.impl.InFileStudentRepositoryImpl"/>
@@ -32,12 +32,12 @@
     <bean id="studentRepositoryFactory" class="com.college.student.repository.factory.StudentRepositoryFactory"/>
 
     <bean id="studentService" class="com.college.student.service.impl.StudentServiceImpl">
-        <constructor-arg value="DB" type="com.college.student.storagetype.StorageType"/>
+        <constructor-arg value="DB" type="com.college.student.constant.StorageType"/>
         <constructor-arg ref="studentRepositoryFactory"/>
     </bean>
-    <bean id="getStudentEventListener" class="com.college.student.listener.impl.GetStudentEventListener"/>
-    <bean id="addStudentEventListener" class="com.college.student.listener.impl.AddStudentEventListener"/>
-    <bean id="deleteStudentEventListener" class="com.college.student.listener.impl.DeleteStudentEventListener"/>
-    <bean id="updateStudentEventListener" class="com.college.student.listener.impl.UpdateStudentEventListener"/>
-    <bean id="getAllStudentEventListener" class="com.college.student.listener.impl.GetAllStudentEventListener"/>
+    <bean id="getStudentEventListener" class="com.college.student.listener.GetStudentEventListener"/>
+    <bean id="addStudentEventListener" class="com.college.student.listener.AddStudentEventListener"/>
+    <bean id="deleteStudentEventListener" class="com.college.student.listener.DeleteStudentEventListener"/>
+    <bean id="updateStudentEventListener" class="com.college.student.listener.UpdateStudentEventListener"/>
+    <bean id="getAllStudentEventListener" class="com.college.student.listener.GetAllStudentEventListener"/>
 </beans>

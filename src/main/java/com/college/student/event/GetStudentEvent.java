@@ -1,11 +1,9 @@
-package com.college.student.event.impl;
+package com.college.student.event;
 
-import com.college.student.event.IEvent;
 import com.college.student.pojo.Student;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.stereotype.Component;
 
-public class GetStudentEvent extends ApplicationEvent implements IEvent {
+public class GetStudentEvent extends ApplicationEvent {
     private final Student student;
     private final Object source;
 

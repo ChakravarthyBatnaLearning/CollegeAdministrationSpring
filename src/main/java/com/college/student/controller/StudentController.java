@@ -1,6 +1,6 @@
 package com.college.student.controller;
 
-import com.college.student.event.impl.*;
+import com.college.student.event.*;
 import com.college.student.exception.*;
 import com.college.student.pojo.Student;
 import com.college.student.service.StudentService;
@@ -27,7 +27,8 @@ public class StudentController {
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
     private final StudentService studentService;
     @Autowired
-private ApplicationEventPublisher applicationEventPublisher;
+    private ApplicationEventPublisher applicationEventPublisher;
+
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -44,7 +45,7 @@ private ApplicationEventPublisher applicationEventPublisher;
 
                 logger.info("Student Object Received : {}", student);
                 studentService.addStudent(student);
-                applicationEventPublisher.publishEvent(new AddStudentEvent(this.getClass(),student));
+                applicationEventPublisher.publishEvent(new AddStudentEvent(this.getClass(), student));
                 //    EventHandler.getInstance(true).publishEvent(new AddStudentEvent(this.getClass(), student));  // publish the event
                 logger.info("Added Student to DB");
             } catch (AddStudentException e) {
@@ -69,7 +70,7 @@ private ApplicationEventPublisher applicationEventPublisher;
                 throw new StudentNotFoundException("Student with RollNo : " + rollNo + " Not Found", HttpServletResponse.SC_NOT_FOUND);
             }
             logger.info("Student Details Received : {}", student);
-            applicationEventPublisher.publishEvent(new GetStudentEvent(this.getClass(),student));
+            applicationEventPublisher.publishEvent(new GetStudentEvent(this.getClass(), student));
             //     EventHandler.getInstance(false).publishEvent(new GetStudentEvent(this.getClass(), student));
         } catch (StudentNotFoundException e) {
             logger.error("Exception Occurred while Requested to Get Student data : ", e);
@@ -90,7 +91,7 @@ private ApplicationEventPublisher applicationEventPublisher;
             if (studentList == null)
                 throw new StudentListNotFoundException("No Students Are Found", HttpServletResponse.SC_NOT_FOUND);
             logger.info("Student List Received : {}", studentList);
-            applicationEventPublisher.publishEvent(new GetAllStudentEvent(this.getClass(),studentList));
+            applicationEventPublisher.publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
             //       EventHandler.getInstance(true).publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
             logger.info("Student List  : {}", studentList);
         } catch (StudentListNotFoundException e) {
@@ -111,7 +112,7 @@ private ApplicationEventPublisher applicationEventPublisher;
             if (student == null)
                 throw new StudentUpdateException("Error While Updating the Student", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.info("Request Successfully Completed for Update for Student {}", student);
-            applicationEventPublisher.publishEvent(new UpdateStudentEvent(this.getClass(),student));
+            applicationEventPublisher.publishEvent(new UpdateStudentEvent(this.getClass(), student));
             //        EventHandler.getInstance(false).publishEvent(new UpdateStudentEvent(this.getClass(), student));
         } catch (StudentUpdateException e) {
             logger.error("Exception Occurred while Updating the StudentByRollNo : ", e);
@@ -130,7 +131,7 @@ private ApplicationEventPublisher applicationEventPublisher;
             Student student = studentService.deleteStudentByRollNo(Integer.parseInt(rollNo));
             if (student == null) throw new DeleteStudentException("Error While Deleting Student", 500);
             logger.info("Successfully Deleted the Student : {}", student);
-            applicationEventPublisher.publishEvent(new DeleteStudentEvent(this.getClass(),student));
+            applicationEventPublisher.publishEvent(new DeleteStudentEvent(this.getClass(), student));
             //      EventHandler.getInstance(false).publishEvent(new DeleteStudentEvent(this.getClass(), student));
         } catch (DeleteStudentException e) {
             logger.info("Exception Occurred while Deleting a Student having rollNo : {} and Exception : ", Integer.parseInt(rollNo), e);

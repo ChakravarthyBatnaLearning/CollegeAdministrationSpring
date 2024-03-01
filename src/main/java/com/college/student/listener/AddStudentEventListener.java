@@ -1,12 +1,11 @@
-package com.college.student.listener.impl;
+package com.college.student.listener;
 
-import com.college.student.event.impl.AddStudentEvent;
-import com.college.student.listener.IEventListener;
+import com.college.student.event.AddStudentEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class AddStudentEventListener implements IEventListener<AddStudentEvent>, ApplicationListener<AddStudentEvent> {
+public class AddStudentEventListener implements ApplicationListener<AddStudentEvent> {
     private static final Logger logger = LoggerFactory.getLogger(AddStudentEventListener.class);
 
 

@@ -1,7 +1,7 @@
 package com.college.student.repository.factory;
 
 import com.college.student.repository.StudentRepository;
-import com.college.student.storagetype.StorageType;
+import com.college.student.constant.StorageType;
 
 import java.util.List;
 

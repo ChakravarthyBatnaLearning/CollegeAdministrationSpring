@@ -1,4 +1,4 @@
-package com.college.student.storagetype;
+package com.college.student.constant;
 
 public enum StorageType {
     DB,
