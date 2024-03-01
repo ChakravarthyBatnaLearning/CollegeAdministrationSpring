@@ -143,6 +143,12 @@
             <version>2.23.0</version>
         </dependency>
         <!--end-->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>6.1.4</version>
+        </dependency>
 
     </dependencies>
 

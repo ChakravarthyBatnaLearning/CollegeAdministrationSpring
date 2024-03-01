@@ -1,42 +1,47 @@
 package com.college.student.repository.impl;
 
+import com.college.student.exception.*;
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
 import com.college.student.storagetype.StorageType;
-import com.college.student.utils.DBConnector;
-import org.springframework.stereotype.Repository;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class InDBRepositoryImplementation implements StudentRepository {
-    public boolean accept(StorageType storageType){
+    private static final Logger logger = LoggerFactory.getLogger(InDBRepositoryImplementation.class);
+@Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public boolean accept(StorageType storageType) {
         return storageType == StorageType.DB;
     }
+
     @Override
     public List<Student> listStudents() {
         String query = "select * from student";
         List<Student> studentList = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(query);
-            ResultSet resultset = preparedStatement.executeQuery(query);
-            while (resultset.next()) {
+            return jdbcTemplate.query(query, (resultSet, rowNum) -> {
                 Student student = new Student();
-                student.setRollNo(resultset.getInt(1));
-                student.setName(resultset.getString("name"));
-                student.setAge(resultset.getByte(3));
-                student.setPhoneNo(resultset.getLong(4));
-                student.setGender(resultset.getString(5));
-                studentList.add(student);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+                student.setRollNo(resultSet.getInt("rollNo"));
+                student.setName(resultSet.getString("name"));
+                student.setAge(resultSet.getByte("age"));
+                student.setPhoneNo(resultSet.getLong("phoneNumber"));
+                student.setGender(resultSet.getString("GENDER"));
+                return student;
+            });
+        } catch (StudentListNotFoundException e) {
+            logger.error("Error While getting the List of Students");
+            throw e;
         }
-        return studentList;
     }
 
 
@@ -44,43 +49,28 @@ public class InDBRepositoryImplementation implements StudentRepository {
     public void addStudent(@org.jetbrains.annotations.NotNull Student student) {
         String query = "insert into student values(?,?,?,?,?)";
         try {
-            PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(query);
-            preparedStatement.setInt(1,student.getRollNo());
-            preparedStatement.setString(2,student.getName());
-            preparedStatement.setByte(3,student.getAge());
-            preparedStatement.setLong(4,student.getPhoneNo());
-            preparedStatement.setString(5,student.getGender());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            int rowsEffected = jdbcTemplate.update(query, student.getRollNo(), student.getName(), student.getAge(), student.getPhoneNo(), student.getGender());
+            if (rowsEffected == 0)
+                throw new AddStudentException("Error Occured While Adding the Student " + student, 500);
+            logger.error("Exception While Adding the Student {}", student);
+        } catch (AddStudentException e) {
+            logger.error("Error While Adding the Student : {}", student);
+            throw e;
         }
     }
 
     @Override
     public Student deleteStudent(int rollNo) {
-        String selectQuery = "select * from student where rollNo = ?";
+        //  String selectQuery = "select * from student where rollNo = ?";
         String deleteQuery = "delete from student where rollNo = ?";
         Student student = new Student();
         try {
-            PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(selectQuery);
-            preparedStatement.setInt(1,rollNo);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {
-                student.setRollNo(resultSet.getInt(1));
-                student.setName(resultSet.getString(2));
-                student.setAge(resultSet.getByte(3));
-                student.setPhoneNo(resultSet.getLong(4));
-                student.setGender(resultSet.getString(5));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(deleteQuery);
-            preparedStatement.setInt(1,rollNo);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            student = getStudentData(rollNo);
+            jdbcTemplate.update(deleteQuery, rollNo);
+            logger.info("Student Successfully Deleted");
+        } catch (DeleteStudentException e) {
+            logger.error("Error While Deleting the Student with RollNo : {}", rollNo);
+            throw e;
         }
         return student;
     }
@@ -89,15 +79,14 @@ public class InDBRepositoryImplementation implements StudentRepository {
     public Student updateStudentByRollNo(Student student) {
         String query = "update student set name = ?, age = ?, phoneNumber = ?, GENDER = ? where rollNo = ?";
         try {
-            PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(query);
-            preparedStatement.setString(1,student.getName());
-            preparedStatement.setByte(2,student.getAge());
-            preparedStatement.setLong(3,student.getPhoneNo());
-            preparedStatement.setInt(4,student.getRollNo());
-            preparedStatement.setString(5,student.getGender());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            int rowsEffected = jdbcTemplate.update(query, student.getName(), student.getAge(), student.getPhoneNo(), student.getGender());
+            if (rowsEffected == 0) {
+                logger.error("No Student Found with RollNo : {}", student.getRollNo() + " To Exeucte Update Query");
+                throw new StudentUpdateException("No Student Found with RollNo : " + student.getRollNo(), HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (StudentUpdateException e) {
+            logger.error("Error Occurred While Updating the Student {}", student);
+            throw new StudentUpdateException("Error updating student with roll number: " + student.getRollNo(), 404);
         }
         return student;
     }
@@ -105,23 +94,21 @@ public class InDBRepositoryImplementation implements StudentRepository {
     @Override
     public Student getStudentData(int studentRollNo) {
         String selectQuery = "select * from student where rollNo = ?";
-        Student student = new Student();
         try {
-            PreparedStatement preparedStatement = DBConnector.connect().prepareStatement(selectQuery);
-            preparedStatement.setInt(1,studentRollNo);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {
-                student.setRollNo(resultSet.getInt(1));
-                student.setName(resultSet.getString(2));
-                student.setAge(resultSet.getByte(3));
-                student.setPhoneNo(resultSet.getLong(4));
-                student.setGender(resultSet.getString(5));
+            return jdbcTemplate.queryForObject(selectQuery, new Object[]{studentRollNo}, (resultSet, i) -> {
+                Student student = new Student();
+                student.setRollNo(resultSet.getInt("rollNo"));
+                student.setName(resultSet.getString("name"));
+                student.setAge(resultSet.getByte("age"));
+                student.setPhoneNo(resultSet.getLong("phoneNumber"));
+                student.setGender(resultSet.getString("GENDER"));
                 return student;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            });
+        } catch (StudentNotFoundException e) {
+            logger.error("Error While Getting Student with RollNo : {} excption", studentRollNo);
+            throw e;
         }
-        return null;
+
     }
 
     @Override
