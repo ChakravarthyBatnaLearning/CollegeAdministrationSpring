@@ -11,7 +11,7 @@ public class InMemoryStudentRepositoryImpl implements StudentRepository {
     public boolean accept(StorageType storageType){
         return storageType == StorageType.IN_MEMORY;
     }
-    private List<Student> studentList = new ArrayList<>();
+    private final List<Student> studentList = new ArrayList<>();
     @Override
     public void addStudent(Student student) {  //adding student in list;
         studentList.add(student);

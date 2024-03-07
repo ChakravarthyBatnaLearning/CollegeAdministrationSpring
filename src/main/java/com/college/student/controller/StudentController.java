@@ -1,5 +1,6 @@
 package com.college.student.controller;
 
+import com.college.student.comparator.StudentAgeAndGenderComparator;
 import com.college.student.event.*;
 import com.college.student.exception.*;
 import com.college.student.pojo.Student;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8084")
@@ -98,6 +100,7 @@ public class StudentController {
             logger.error("Exception Occurred while Requesting the to List Student Data : ", e);
             throw e;
         }
+        Collections.sort(studentList, new StudentAgeAndGenderComparator());
         return studentList;
     }
 

@@ -43,6 +43,7 @@ public class InDBRepositoryImplementation implements StudentRepository {
             if (rowsEffected == 0)
                 throw new AddStudentException("Error Occured While Adding the Student " + student, 500);
             logger.error("Exception While Adding the Student {}", student);
+            System.out.println();
         } catch (AddStudentException e) {
             logger.error("Error While Adding the Student : {}", student);
             throw e;
