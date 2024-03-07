@@ -1,9 +1,9 @@
-package com.college.student.cachedemo;
+package com.college.student.cache.lru_dll;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class LRUCacheList<T> {
+public class LRU_DoubleLinkedList<T> {
     private Node<T> head;
     private Node<T> tail;
 

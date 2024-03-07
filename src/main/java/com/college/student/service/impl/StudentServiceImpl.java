@@ -1,7 +1,7 @@
 //StudentService class will call various method of StudentRepository to perform operations;
 package com.college.student.service.impl;
 
-import com.college.student.cachedemo.LRUCache;
+import com.college.student.cache.lru_dll.LRUCache;
 import com.college.student.constant.StorageType;
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;

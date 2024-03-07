@@ -1,4 +1,6 @@
-package com.college.student.cachedemo;
+package com.college.student.cache.lru_dll;
+
+import com.college.student.cache.lru_dll.LRU_DoubleLinkedList;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,11 +9,11 @@ import java.util.Map;
 public class LRUCache<K,V> {
     private final int size;
     private final Map<K,V> cacheMap;
-    private  final LRUCacheList<K> dlldDemo;
+    private  final LRU_DoubleLinkedList<K> dlldDemo;
     public LRUCache(int size) {
         this.size = size;
         cacheMap = new HashMap<>(size);
-        dlldDemo = new LRUCacheList<>();
+        dlldDemo = new LRU_DoubleLinkedList<>();
     }
     public void put(K key,V value) {
         if (cacheMap.size() >= size) removeEldest();

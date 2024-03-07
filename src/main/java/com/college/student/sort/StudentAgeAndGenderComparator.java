@@ -1,4 +1,4 @@
-package com.college.student.comparator;
+package com.college.student.sort;
 
 import com.college.student.pojo.Student;
 import org.slf4j.Logger;

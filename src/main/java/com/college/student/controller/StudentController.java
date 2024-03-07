@@ -1,6 +1,6 @@
 package com.college.student.controller;
 
-import com.college.student.comparator.StudentAgeAndGenderComparator;
+import com.college.student.sort.StudentAgeAndGenderComparator;
 import com.college.student.event.*;
 import com.college.student.exception.*;
 import com.college.student.pojo.Student;
