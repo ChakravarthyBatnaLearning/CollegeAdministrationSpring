@@ -4,25 +4,21 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LRUCache_LHM<K, V> {
-    private  final LinkedHashMap<K, V> lruCache_lhm;
+    private static volatile LinkedHashMap<?, ?> lruCache_lhm;
 
-    public LRUCache_LHM(int size) {
-        this.lruCache_lhm = new LinkedHashMap<>(size, 0.75f, true) {
-            @Override
-            public boolean removeEldestEntry(Map.Entry entry) {
-                return size() >= size;
-            }
-        };
-    }
-
-    public  LinkedHashMap<K, V> getLruCache_lhm() {
-        if (lruCache_lhm != null) {
+    public static LinkedHashMap<?, ?> getLruCache_lhm(int size) {
+        if (lruCache_lhm == null) {
             synchronized (LRUCache_LHM.class) {
-                if (lruCache_lhm != null) {
-                    return lruCache_lhm;
+                if (lruCache_lhm == null) {
+                    lruCache_lhm = new LinkedHashMap<>(size, 0.75f, true) {
+                        @Override
+                        public boolean removeEldestEntry(Map.Entry entry) {
+                            return size() >= size;
+                        }
+                    };
                 }
             }
         }
-        return null;
+        return lruCache_lhm;
     }
 }

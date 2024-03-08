@@ -25,6 +25,9 @@ public class LRUCacheWithHM<K,V>{
         return cacheDeque.removeLast();
     }
     public V get(K key) {
+        if (cacheDeque.remove(key)) {
+            cacheDeque.addFirst(key);
+        }
         return cacheMap.get(key);
     }
     public HashMap<K,V> getAll() {
