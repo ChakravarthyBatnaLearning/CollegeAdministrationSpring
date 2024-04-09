@@ -8,10 +8,11 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 @Component
-public  class StudentRowMapper implements RowMapper<Student> {
+public class StudentRowMapper implements RowMapper<Student> {
     @Override
-    public  Student mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
+    public Student mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
         Student student = new Student();
         Address address = new Address();
 
@@ -27,7 +28,10 @@ public  class StudentRowMapper implements RowMapper<Student> {
         address.setState(rs.getString("state"));
         address.setCity(rs.getString("city"));
 
-        student.setAddress(address);
+        if (address.getCountry() != null || address.getCity() != null || address.getState() != null) {
+            student.setAddress(address);
+        }
+
         return student;
     }
 }

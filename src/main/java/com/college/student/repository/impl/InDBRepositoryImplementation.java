@@ -26,7 +26,8 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public List<Student> listStudents() {
-        String query = "select s.*, a.country, a.state, a.city from student s inner join address a on s.rollNo = a.rollNo ";
+        String query = "select s.*, a.country, a.state, a.city from student s inner join" +
+                " address a on s.rollNo = a.rollNo order by s.rollNo";
         try {
             return jdbcTemplate.query(query, new StudentRowMapper());
         } catch (StudentListNotFoundException e) {
@@ -41,14 +42,20 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
         String studentAddQuery = "insert into student (rollNo, name, age, phoneNumber, Gender) values(?,?,?,?,?)";
         String studentAddressQuery = "insert into address (country, state, city, rollNo) values (?, ?, ?, ?);";
+        int studentRowsEffected = 0, addressRowsEffected = 0;
         try {
 
-            int studentRowsEffected = jdbcTemplate.update(studentAddQuery, student.getRollNo(), student.getName(),
+            studentRowsEffected = jdbcTemplate.update(studentAddQuery, student.getRollNo(), student.getName(),
                     student.getAge(), student.getPhoneNo(), student.getGender());
-            int addressRowsEffected = jdbcTemplate.update(studentAddressQuery, student.getAddress().getCountry(),
-                    student.getAddress().getState(), student.getAddress().getCity(), student.getRollNo());
+            if (student.getAddress() != null) {
+                addressRowsEffected = jdbcTemplate.update(studentAddressQuery, student.getAddress().getCountry(),
+                        student.getAddress().getState(), student.getAddress().getCity(), student.getRollNo());
+            } else {
+                //if address is null, insert null values to address table;
+                addressRowsEffected = jdbcTemplate.update(studentAddressQuery, null, null, null, student.getRollNo());
+            }
 
-            if (studentRowsEffected == 0 || addressRowsEffected == 0) {
+            if (studentRowsEffected == 0 && addressRowsEffected == 0) {
                 logger.error("Exception While Adding the Student {}", student);
                 throw new AddStudentException("Error Occured While Adding the Student " + student, 500);
             }
@@ -62,7 +69,7 @@ public class InDBRepositoryImplementation implements StudentRepository {
     @Override
     public Student deleteStudent(int rollNo) {
         String deleteQuery = "delete from student where rollNo = ?";
-        Student student = new Student();
+        Student student;
         try {
             student = getStudentData(rollNo);
             jdbcTemplate.update(deleteQuery, rollNo);
@@ -80,7 +87,7 @@ public class InDBRepositoryImplementation implements StudentRepository {
         try {
             int rowsEffected = jdbcTemplate.update(query, student.getName(), student.getAge(), student.getPhoneNo(), student.getGender(), student.getRollNo());
             if (rowsEffected == 0) {
-                logger.error("No Student Found with RollNo : {}", student.getRollNo() + " To Exeucte Update Query");
+                logger.error("No Student Found with RollNo : {}", student.getRollNo() + " To Execute Update Query");
                 throw new StudentUpdateException("No Student Found with RollNo : " + student.getRollNo(), HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (StudentUpdateException e) {
