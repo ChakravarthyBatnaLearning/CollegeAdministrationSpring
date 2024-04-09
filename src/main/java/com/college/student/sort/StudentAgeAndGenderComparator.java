@@ -11,12 +11,13 @@ public class StudentAgeAndGenderComparator implements Comparator<Student> {
 
     @Override
     public int compare(Student student1, Student student2) {
-        logger.info("Comparator invokes to sort list");
-        if (student1.getAge() > student2.getAge() && student1.getGender().equals("FEMALE")
-                && !student2.getGender().equals("FEMALE")) return -1;
-        if (student1.getAge() > student2.getAge() && student1.getGender().equals("MALE")
-                && !student2.getGender().equals("MALE")) return -1;
-        if (student1.getAge() > student2.getAge() && student1.getGender().equals("OTHER")) return -1;
-        return Byte.compare(student1.getAge(), student2.getAge());
+//        logger.info("Comparator invokes to sort list");
+//        if (student1.getAge() > student2.getAge() && student1.getGender().equals("FEMALE")
+//                && !student2.getGender().equals("FEMALE")) return -1;
+//        if (student1.getAge() > student2.getAge() && student1.getGender().equals("MALE")
+//                && !student2.getGender().equals("MALE")) return -1;
+//        if (student1.getAge() > student2.getAge() && student1.getGender().equals("OTHER")) return -1;
+//        return Byte.compare(student1.getAge(), student2.getAge());
+        return 0;
     }
 }

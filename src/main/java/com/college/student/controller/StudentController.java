@@ -1,12 +1,11 @@
 package com.college.student.controller;
 
-import com.college.student.sort.StudentAgeAndGenderComparator;
 import com.college.student.event.*;
 import com.college.student.exception.*;
 import com.college.student.pojo.Student;
 import com.college.student.service.StudentService;
+import com.college.student.sort.StudentAgeAndGenderComparator;
 import com.college.student.utils.HttpUtil;
-import com.google.gson.JsonSyntaxException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +16,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class StudentController {
 
     @PostMapping()
     @ResponseBody
-    public Student addStudentData(@RequestBody Student student, HttpServletRequest request, HttpServletResponse response) throws IOException, InterruptedException {
+    public Student addStudentData(@RequestBody Student student, HttpServletRequest request) throws AddStudentException{
         HttpSession userSession = request.getSession(false);
         String cookieValue = HttpUtil.getCookieByName("my_auth_cookie", request);
         if (userSession.getAttribute(cookieValue) != null) {
@@ -48,7 +46,6 @@ public class StudentController {
                 logger.info("Student Object Received : {}", student);
                 studentService.addStudent(student);
                 applicationEventPublisher.publishEvent(new AddStudentEvent(this.getClass(), student));
-                //    EventHandler.getInstance(true).publishEvent(new AddStudentEvent(this.getClass(), student));  // publish the event
                 logger.info("Added Student to DB");
             } catch (AddStudentException e) {
                 logger.error("Exception Occurred while Added Student : ", e);
@@ -60,7 +57,7 @@ public class StudentController {
 
     @GetMapping("/{rollNo}")
     @ResponseBody
-    public Student getStudentData(HttpServletRequest request, @PathVariable String rollNo) throws Exception {
+    public Student getStudentData(HttpServletRequest request, @PathVariable String rollNo) throws StudentListNotFoundException {
         Student student = null;
         logger.info("Request Received to Get the Student Details");
         logger.info("rollNo received {}", rollNo);
@@ -73,7 +70,6 @@ public class StudentController {
             }
             logger.info("Student Details Received : {}", student);
             applicationEventPublisher.publishEvent(new GetStudentEvent(this.getClass(), student));
-            //     EventHandler.getInstance(false).publishEvent(new GetStudentEvent(this.getClass(), student));
         } catch (StudentNotFoundException e) {
             logger.error("Exception Occurred while Requested to Get Student data : ", e);
             throw e;
@@ -84,7 +80,7 @@ public class StudentController {
 
     @GetMapping()
     @ResponseBody
-    public List<Student> getStudentList(HttpServletResponse response) throws InterruptedException {
+    public List<Student> getStudentList() throws StudentListNotFoundException {
         logger.info("Request Received to Get the Student Details");
         List<Student> studentList = null;
         logger.info("Request Received to List All Students");
@@ -94,7 +90,6 @@ public class StudentController {
                 throw new StudentListNotFoundException("No Students Are Found", HttpServletResponse.SC_NOT_FOUND);
             logger.info("Student List Received : {}", studentList);
             applicationEventPublisher.publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
-            //       EventHandler.getInstance(true).publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
             logger.info("Student List  : {}", studentList);
         } catch (StudentListNotFoundException e) {
             logger.error("Exception Occurred while Requesting the to List Student Data : ", e);
@@ -106,7 +101,7 @@ public class StudentController {
 
     @PutMapping()
     @ResponseBody
-    public Student updateStudentData(@RequestBody Student student, HttpServletResponse response) throws InterruptedException {
+    public Student updateStudentData(@RequestBody Student student) throws StudentUpdateException {
         logger.info("Request Received to Update the Student Data");
 
         try {
@@ -127,7 +122,7 @@ public class StudentController {
 
     @DeleteMapping("/{rollNo}")
     @ResponseBody
-    public String deleteStudentData(@PathVariable String rollNo, HttpServletResponse response) throws JsonSyntaxException, InterruptedException {
+    public String deleteStudentData(@PathVariable String rollNo) throws DeleteStudentException {
         logger.info("Request to Delete Student Received");
         try {
             logger.info("Successfully Received Student RollNo : {}", Integer.parseInt(rollNo));
@@ -135,7 +130,6 @@ public class StudentController {
             if (student == null) throw new DeleteStudentException("Error While Deleting Student", 500);
             logger.info("Successfully Deleted the Student : {}", student);
             applicationEventPublisher.publishEvent(new DeleteStudentEvent(this.getClass(), student));
-            //      EventHandler.getInstance(false).publishEvent(new DeleteStudentEvent(this.getClass(), student));
         } catch (DeleteStudentException e) {
             logger.info("Exception Occurred while Deleting a Student having rollNo : {} and Exception : ", Integer.parseInt(rollNo), e);
             throw e;

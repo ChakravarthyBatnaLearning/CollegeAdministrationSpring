@@ -18,6 +18,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(MyResponseExceptionHandler.class);
 
+    @ExceptionHandler(value = {AddStudentException.class})
+    public ResponseEntity<Object> handleAddStudentException(AddStudentException ex, WebRequest request) {
+
+        logger.error("ControllerAdvice ExceptionHandler catches the Exception: ", ex);
+        logger.error("Error While Adding Student data : ", ex);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
+        logger.error("Sending ErrorResponse to Client : ", ex);
+        return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
     @ExceptionHandler(value = {StudentNotFoundException.class})
     public ResponseEntity<Object> handleStudentNotFoundException(StudentNotFoundException ex, WebRequest request) {
 
@@ -66,19 +78,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    @ExceptionHandler(value = {AddStudentException.class})
-    public ResponseEntity<Object> handleAddStudentException(AddStudentException ex, WebRequest request) {
-
-        logger.error("ControllerAdvice ExceptionHandler catches the Exception: ", ex);
-        logger.error("Error While Adding Student data : ", ex);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
-        logger.error("Sending ErrorResponse to Client : ", ex);
-        return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
-    }
-
-    @ExceptionHandler(value = {Exception.class})
+    @ExceptionHandler(value = {Throwable.class})
     public ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {
 
         logger.error("ControllerAdvice ExceptionHandler catches the Exception: ", ex);

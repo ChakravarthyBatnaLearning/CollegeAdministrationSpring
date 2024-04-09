@@ -28,6 +28,7 @@ public class LRU_DoubleLinkedList<T> {
             head = node;
         }
     }
+
     public T removeLast() {
         Node<T> temp = null;
         if (tail != null) {
@@ -66,7 +67,7 @@ public class LRU_DoubleLinkedList<T> {
     }
 
     public T get(T key) {
-        if ( head == null) return null;
+        if (head == null) return null;
         if (head.key == key) return key;
         if (tail.key == key) {
             tail.prev.next = null;
@@ -88,6 +89,7 @@ public class LRU_DoubleLinkedList<T> {
         }
         return null;
     }
+
     public List<T> getAll() {
         List<T> keySet = new LinkedList<>();
         Node<T> temp = head;

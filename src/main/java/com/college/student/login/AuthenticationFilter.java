@@ -41,7 +41,6 @@ public class AuthenticationFilter implements Filter {    //mapped to StudentServ
             logger.info("Generated Json Error Response {}", jsonResponse);
             out.println(jsonResponse);
             out.flush();
-            return;
         }
     }
 }

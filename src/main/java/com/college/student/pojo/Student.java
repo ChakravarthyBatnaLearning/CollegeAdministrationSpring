@@ -8,13 +8,21 @@ import java.util.Objects;
 //POJO-plain old java object's
 //it's to store the student data;
 public class Student implements Serializable, Comparable<Student>, Cloneable {
-
     private static final long serialVersionUID = 5868686868678586L;
     private int rollNo;
     private String name;
     private byte age;
     private long phoneNo;
     private String gender;
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public int getRollNo() {
         return this.rollNo;
@@ -68,16 +76,23 @@ public class Student implements Serializable, Comparable<Student>, Cloneable {
 
     @Override
     public int compareTo(@NotNull Student student) {
-        if (this.age > student.getAge() && this.gender.equals("FEMALE")) return -1;
-        if (this.age > student.getAge() && this.gender.equals("MALE")) return -1;
-        if (this.age > student.getAge() && this.gender.equals("OTHER")) return -1;
-        return Byte.compare(student.getAge(), this.age);
+        int results = Integer.compare(student.getRollNo(), rollNo);
+        if (results == 0) results = name.compareTo(student.getName());
+        if (results == 0) results = Integer.compare(age, student.getAge());
+        return results;
     }
 
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
+        Student student = (Student) object;
+        if (rollNo == student.getRollNo()) return true;
         return getClass() == object.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rollNo, name, age, phoneNo, gender);
     }
 
     @Override
