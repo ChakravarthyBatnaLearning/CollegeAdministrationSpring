@@ -1,7 +1,7 @@
 package com.college.student.pojo;
 
 import org.jetbrains.annotations.NotNull;
-
+import java.util.List;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,14 +14,23 @@ public class Student implements Serializable, Comparable<Student>, Cloneable {
     private byte age;
     private long phoneNo;
     private String gender;
-    private Address address;
+    private List<Address> addressList;
+    private Admission admission;
 
-    public Address getAddress() {
-        return address;
+    public List<Address> getAddressList() {
+        return addressList;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
+    }
+
+    public Admission getAdmission() {
+        return admission;
+    }
+
+    public void setAdmission(Admission admission) {
+        this.admission = admission;
     }
 
     public int getRollNo() {

@@ -28,12 +28,16 @@
     <bean id="studentRepositoryDb" class="com.college.student.repository.impl.indb.StudentRepositoryImpl"/>
     <bean id="studentRepositoryFile" class="com.college.student.repository.impl.InFileStudentRepositoryImpl"/>
     <bean id="studentRepositoryInMemory" class="com.college.student.repository.impl.InMemoryStudentRepositoryImpl"/>
+    <bean id="admissionRepository" class="com.college.student.repository.impl.indb.AdmissionRepositoryImpl"/>
+    <bean id="addressRepository" class="com.college.student.repository.impl.indb.AddressRepositoryImpl"/>
 
     <bean id="studentRepositoryFactory" class="com.college.student.repository.factory.StudentRepositoryFactory"/>
 
     <bean id="studentService" class="com.college.student.service.impl.StudentServiceImpl">
         <constructor-arg value="DB" type="com.college.student.constant.StorageType"/>
         <constructor-arg ref="studentRepositoryFactory"/>
+        <constructor-arg ref="addressRepository"/>
+        <constructor-arg ref="admissionRepository"/>
     </bean>
     <bean id="getStudentEventListener" class="com.college.student.listener.GetStudentEventListener"/>
     <bean id="addStudentEventListener" class="com.college.student.listener.AddStudentEventListener"/>

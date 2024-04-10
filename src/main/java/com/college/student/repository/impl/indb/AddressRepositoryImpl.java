@@ -15,7 +15,7 @@ import java.util.List;
 public class AddressRepositoryImpl implements AddressRepository {
     private static final Logger logger = LoggerFactory.getLogger(AddressRepositoryImpl.class);
     private static final String insertQuery = "INSERT INTO address VALUES (?,?,?,?,?)";
-    private static final String listQuery = "SELETE * FROM address WHERE ROLL_NO = ?";
+    private static final String listQuery = "SELECT * FROM address WHERE ROLL_NO = ?";
     private static final String updateAddressQuery = "UPDATE address SET COUNTRY = ?, STATE = ?, CITY = ?, ADDRESS_TYPE = ? WHERE ROLL_NO = ?";
     private static final String deleteQuery = "DELETE FROM address WHERE ROLL_NO = ?";
     private static final String getPermanentAddressQuery = "SELECT * FROM STUDENT WHERE ROLL_NO = ? AND ADDRESS_TYPE = 'permanent'";
