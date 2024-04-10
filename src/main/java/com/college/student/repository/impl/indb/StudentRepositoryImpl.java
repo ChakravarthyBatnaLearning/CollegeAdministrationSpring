@@ -1,4 +1,4 @@
-package com.college.student.repository.impl;
+package com.college.student.repository.impl.indb;
 
 import com.college.student.constant.StorageType;
 import com.college.student.exception.*;
@@ -15,8 +15,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class InDBRepositoryImplementation implements StudentRepository {
-    private static final Logger logger = LoggerFactory.getLogger(InDBRepositoryImplementation.class);
+public class StudentRepositoryImpl implements StudentRepository {
+    private static final Logger logger = LoggerFactory.getLogger(StudentRepositoryImpl.class);
+    private static final String listQuery = "SELECT * FROM student";
+    private static final String insertQuery = "INSERT INTO student VALUES (?,?,?,?,?)";
+    private static final String deleteQuery = "DELETE FROM student WHERE ROLL_NO = ?";
+    private static final String updateQuery = "UPDATE student SET NAME = ?, AGE = ?, PHONE_NUMBER = ?, GENDER = ? WHERE ROLL_NO = ?";
+    private static final String getQuery = "SELECT * FROM student WHERE ROLL_NO = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -26,10 +31,8 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public List<Student> listStudents() {
-        String query = "select s.*, a.country, a.state, a.city from student s inner join" +
-                " address a on s.rollNo = a.rollNo order by s.rollNo";
         try {
-            return jdbcTemplate.query(query, new StudentRowMapper());
+            return jdbcTemplate.query(listQuery, new StudentRowMapper());
         } catch (StudentListNotFoundException e) {
             logger.error("Error While getting the List of Students");
             throw e;
@@ -39,23 +42,13 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public void addStudent(@org.jetbrains.annotations.NotNull Student student) {
-
-        String studentAddQuery = "insert into student (rollNo, name, age, phoneNumber, Gender) values(?,?,?,?,?)";
-        String studentAddressQuery = "insert into address (country, state, city, rollNo) values (?, ?, ?, ?);";
-        int studentRowsEffected = 0, addressRowsEffected = 0;
+        int studentRowsEffected = 0;
         try {
 
-            studentRowsEffected = jdbcTemplate.update(studentAddQuery, student.getRollNo(), student.getName(),
+            studentRowsEffected = jdbcTemplate.update(insertQuery, student.getRollNo(), student.getName(),
                     student.getAge(), student.getPhoneNo(), student.getGender());
-            if (student.getAddress() != null) {
-                addressRowsEffected = jdbcTemplate.update(studentAddressQuery, student.getAddress().getCountry(),
-                        student.getAddress().getState(), student.getAddress().getCity(), student.getRollNo());
-            } else {
-                //if address is null, insert null values to address table;
-                addressRowsEffected = jdbcTemplate.update(studentAddressQuery, null, null, null, student.getRollNo());
-            }
 
-            if (studentRowsEffected == 0 && addressRowsEffected == 0) {
+            if (studentRowsEffected == 0) {
                 logger.error("Exception While Adding the Student {}", student);
                 throw new AddStudentException("Error Occured While Adding the Student " + student, 500);
             }
@@ -68,7 +61,6 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public Student deleteStudent(int rollNo) {
-        String deleteQuery = "delete from student where rollNo = ?";
         Student student;
         try {
             student = getStudentData(rollNo);
@@ -83,9 +75,8 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public Student updateStudentByRollNo(Student student) {
-        String query = "update student set name = ?, age = ?, phoneNumber = ?, GENDER = ? where rollNo = ?";
         try {
-            int rowsEffected = jdbcTemplate.update(query, student.getName(), student.getAge(), student.getPhoneNo(), student.getGender(), student.getRollNo());
+            int rowsEffected = jdbcTemplate.update(updateQuery, student.getName(), student.getAge(), student.getPhoneNo(), student.getGender(), student.getRollNo());
             if (rowsEffected == 0) {
                 logger.error("No Student Found with RollNo : {}", student.getRollNo() + " To Execute Update Query");
                 throw new StudentUpdateException("No Student Found with RollNo : " + student.getRollNo(), HttpServletResponse.SC_NOT_FOUND);
@@ -99,11 +90,8 @@ public class InDBRepositoryImplementation implements StudentRepository {
 
     @Override
     public Student getStudentData(int studentRollNo) {
-        String studentSelectQuery = "select s.*, a.country, a.state, a.city from student s left join address a " +
-                "on s.rollNo = a.rollNo where s.rollNo = ?";
-
         try {
-            return jdbcTemplate.queryForObject(studentSelectQuery, new Object[]{studentRollNo}, new StudentRowMapper());
+            return jdbcTemplate.queryForObject(getQuery, new Object[]{studentRollNo}, new StudentRowMapper());
         } catch (StudentNotFoundException e) {
             logger.error("Error While Getting Student with RollNo : {} excption", studentRollNo);
             throw e;

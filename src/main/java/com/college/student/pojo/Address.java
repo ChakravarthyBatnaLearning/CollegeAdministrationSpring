@@ -1,8 +1,10 @@
 package com.college.student.pojo;
 
+import com.college.student.constant.AddressType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public class Address implements Cloneable, Serializable, Comparable<Address> {
@@ -11,6 +13,15 @@ public class Address implements Cloneable, Serializable, Comparable<Address> {
     private String state;
     private String city;
     private int rollNo;
+    private AddressType addressType;
+
+    public AddressType getAddressType() {
+        return addressType;
+    }
+
+    public void setAddressType(AddressType addressType) {
+        this.addressType = addressType;
+    }
 
     public String getCountry() {
         return country;
@@ -44,6 +55,7 @@ public class Address implements Cloneable, Serializable, Comparable<Address> {
         this.rollNo = rollNo;
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(country, state, city, rollNo);
@@ -64,7 +76,12 @@ public class Address implements Cloneable, Serializable, Comparable<Address> {
 
     @Override
     public String toString() {
-        return "Address{" + "country='" + country + '\'' + ", state='" + state + '\'' + ", city='" + city + '\'' + ", rollNo=" + rollNo + '}';
+        return "Address{" +
+                "country='" + country + '\'' +
+                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
+                ", rollNo=" + rollNo +
+                '}';
     }
 
     @Override

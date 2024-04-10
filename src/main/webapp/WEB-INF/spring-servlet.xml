@@ -25,7 +25,7 @@
 
 
     <bean id="studentRepositoryCSV" class="com.college.student.repository.impl.InCSVFileStudentRepositoryImpl"/>
-    <bean id="studentRepositoryDb" class="com.college.student.repository.impl.InDBRepositoryImplementation"/>
+    <bean id="studentRepositoryDb" class="com.college.student.repository.impl.indb.StudentRepositoryImpl"/>
     <bean id="studentRepositoryFile" class="com.college.student.repository.impl.InFileStudentRepositoryImpl"/>
     <bean id="studentRepositoryInMemory" class="com.college.student.repository.impl.InMemoryStudentRepositoryImpl"/>
 
