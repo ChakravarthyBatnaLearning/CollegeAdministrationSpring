@@ -13,6 +13,7 @@ public interface StudentRepository {
     Student updateStudentByRollNo(Student student);
     //update specific student by rollNo from list
     Student getStudentData(int studentRollNo);  //to get specific student data by rollNo;
+    Student getCompleteStudentData(int studentRollNo);
     boolean isExist(int rollNo);
     public boolean accept(StorageType storageType);
 }

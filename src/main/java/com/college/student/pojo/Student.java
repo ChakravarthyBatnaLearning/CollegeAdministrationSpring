@@ -1,8 +1,9 @@
 package com.college.student.pojo;
 
 import org.jetbrains.annotations.NotNull;
-import java.util.List;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 //POJO-plain old java object's

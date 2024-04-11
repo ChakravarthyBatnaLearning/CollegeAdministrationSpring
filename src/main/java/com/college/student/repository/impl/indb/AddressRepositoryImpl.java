@@ -18,8 +18,8 @@ public class AddressRepositoryImpl implements AddressRepository {
     private static final String listQuery = "SELECT * FROM address WHERE ROLL_NO = ?";
     private static final String updateAddressQuery = "UPDATE address SET COUNTRY = ?, STATE = ?, CITY = ?, ADDRESS_TYPE = ? WHERE ROLL_NO = ?";
     private static final String deleteQuery = "DELETE FROM address WHERE ROLL_NO = ?";
-    private static final String getPermanentAddressQuery = "SELECT * FROM STUDENT WHERE ROLL_NO = ? AND ADDRESS_TYPE = 'permanent'";
-    private static final String getTemporaryAddressQuery = "SELECT * FROM STUDENT WHERE ROLL_NO = ? AND ADDRESS_TYPE = 'temporary'";
+    private static final String getPermanentAddressQuery = "SELECT * FROM address WHERE ROLL_NO = ? AND ADDRESS_TYPE = 'PERMANENT'";
+    private static final String getTemporaryAddressQuery = "SELECT * FROM address WHERE ROLL_NO = ? AND ADDRESS_TYPE = 'TEMPORARY'";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

@@ -78,6 +78,11 @@ public class InFileStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
+    public Student getCompleteStudentData(int studentRollNo) {
+        return null;
+    }
+
+    @Override
     public boolean isExist(int rollNo) {
         return getStudentData(rollNo) != null;
     }

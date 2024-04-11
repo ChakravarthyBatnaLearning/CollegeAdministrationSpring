@@ -4,6 +4,7 @@ import com.college.student.constant.StorageType;
 import com.college.student.exception.*;
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
+import com.college.student.utils.CompleteStudentDataMapper;
 import com.college.student.utils.StudentRowMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -22,6 +23,9 @@ public class StudentRepositoryImpl implements StudentRepository {
     private static final String deleteQuery = "DELETE FROM student WHERE ROLL_NO = ?";
     private static final String updateQuery = "UPDATE student SET NAME = ?, AGE = ?, PHONE_NUMBER = ?, GENDER = ? WHERE ROLL_NO = ?";
     private static final String getQuery = "SELECT * FROM student WHERE ROLL_NO = ?";
+    private static final String completeDataQuery = "SELECT s.*, a.COUNTRY, a.STATE, a.CITY, b.COURSE, b.SECTION, " +
+            "b.ADMISSION_YEAR FROM student s  LEFT JOIN address a ON s.ROLL_NO = a.ROLL_NO LEFT JOIN " +
+            "admission b ON s.ROLL_NO = b.ROLL_NO WHERE s.ROLL_NO = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -93,10 +97,15 @@ public class StudentRepositoryImpl implements StudentRepository {
         try {
             return jdbcTemplate.queryForObject(getQuery, new Object[]{studentRollNo}, new StudentRowMapper());
         } catch (StudentNotFoundException e) {
-            logger.error("Error While Getting Student with RollNo : {} excption", studentRollNo);
+            logger.error("Error While Getting Student with RollNo : {} exception", studentRollNo);
             throw e;
         }
 
+    }
+
+    @Override
+    public Student getCompleteStudentData(int studentRollNo) {
+        return jdbcTemplate.query(completeDataQuery, new Object[]{studentRollNo}, new CompleteStudentDataMapper());
     }
 
     @Override

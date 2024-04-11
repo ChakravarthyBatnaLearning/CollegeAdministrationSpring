@@ -56,6 +56,11 @@ public class InCSVFileStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
+    public Student getCompleteStudentData(int studentRollNo) {
+        return null;
+    }
+
+    @Override
     public boolean isExist(int rollNo) {
        Student student = csvReadAndWriter.getStudentByRollNo(rollNo);
         return student != null;

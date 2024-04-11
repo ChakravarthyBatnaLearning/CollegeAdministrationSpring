@@ -37,7 +37,7 @@ public class StudentController {
 
     @PostMapping()
     @ResponseBody
-    public Student addStudentData(@RequestBody Student student, HttpServletRequest request) throws AddStudentException{
+    public Student addStudentData(@RequestBody Student student, HttpServletRequest request) throws AddStudentException {
         HttpSession userSession = request.getSession(false);
         String cookieValue = HttpUtil.getCookieByName("my_auth_cookie", request);
         if (userSession.getAttribute(cookieValue) != null) {
@@ -64,7 +64,7 @@ public class StudentController {
         logger.info("rollNo received {}", rollNo);
         logger.info("User name : {}", request.getSession(false).getAttribute("username"));
         try {
-            student = studentService.getStudentByRollNo(Integer.parseInt(rollNo));
+            student = studentService.getCompleteStudentData(Integer.parseInt(rollNo));
             if (student == null) {
                 logger.error("Exception Occurred  while Requested to Get Student data : ");
                 throw new StudentNotFoundException("Student with RollNo : " + rollNo + " Not Found", HttpServletResponse.SC_NOT_FOUND);
@@ -237,10 +237,10 @@ public class StudentController {
     // Adding Student Admission
     @PostMapping("/admission/{studentRollNo}")
     @ResponseBody
-    public boolean addStudentAdmission(@RequestBody Admission admission,@PathVariable int studentRollNo) {
+    public boolean addStudentAdmission(@RequestBody Admission admission, @PathVariable int studentRollNo) {
         logger.info("Request to Add Student Admission Received");
         try {
-            boolean result = studentService.addStudentAdmission(admission,studentRollNo);
+            boolean result = studentService.addStudentAdmission(admission, studentRollNo);
             logger.info("Successfully Added Student Admission");
             return result;
         } catch (Exception e) {

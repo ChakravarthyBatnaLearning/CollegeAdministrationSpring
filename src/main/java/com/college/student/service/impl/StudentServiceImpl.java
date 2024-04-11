@@ -2,6 +2,7 @@
 package com.college.student.service.impl;
 
 import com.college.student.cache.lru_dll.LRUCache;
+import com.college.student.constant.AddressType;
 import com.college.student.constant.StorageType;
 import com.college.student.pojo.Address;
 import com.college.student.pojo.Admission;
@@ -49,10 +50,21 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
     }
 
     public Student deleteStudentByRollNo(int rollNo) {
+        Student student = getStudentByRollNo(rollNo);
+        if (student.getAdmission() != null) admissionRepository.deleteStudentAdmission(rollNo);
+        if (student.getAddressList() != null) {
+            addressRepository.deleteAllStudentAddresses(rollNo);
+        }
         return this.studentRepository.deleteStudent(rollNo);
     }
 
     public Student updateStudentDetailsByRollNo(Student updateStudent) {
+        if (updateStudent.getAddressList() != null) {
+             for (Address address : updateStudent.getAddressList()) {
+                 if (address.getAddressType() == AddressType.PERMANENT) addressRepository.updateStudentPermanetAddress(address,updateStudent.getRollNo());
+                 else addressRepository.updateStudentTemporaryAddress(address,updateStudent.getRollNo());
+             }
+        }
         return this.studentRepository.updateStudentByRollNo(updateStudent);
     }
 
@@ -128,5 +140,10 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
     @Override
     public boolean updateStudentAdmission(Admission admission, int studentRollNo) {
         return admissionRepository.updateStudentAdmission(admission, studentRollNo);
+    }
+
+    @Override
+    public Student getCompleteStudentData(int studentRollNo) {
+        return studentRepository.getCompleteStudentData(studentRollNo);
     }
 }

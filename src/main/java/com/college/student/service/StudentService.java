@@ -44,4 +44,6 @@ public interface StudentService {
     boolean deleteStudentAdmission(int rollNo);
 
     boolean updateStudentAdmission(Admission admission, int studentRollNo);
+
+    Student getCompleteStudentData(int studentRollNo);
 }
