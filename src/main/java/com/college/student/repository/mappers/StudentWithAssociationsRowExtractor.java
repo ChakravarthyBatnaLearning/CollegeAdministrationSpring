@@ -3,6 +3,7 @@ package com.college.student.repository.mappers;
 import com.college.student.pojo.Address;
 import com.college.student.pojo.Admission;
 import com.college.student.pojo.Student;
+import com.college.student.repository.constants.AddressConstants;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -29,9 +30,9 @@ public class StudentWithAssociationsRowExtractor implements ResultSetExtractor<S
             }
 
             Address address = new Address();
-            address.setCountry(rs.getString("COUNTRY"));
-            address.setState(rs.getString("STATE"));
-            address.setCity(rs.getString("CITY"));
+            address.setCountry(rs.getString(AddressConstants.COUNTRY.toString()));
+            address.setState(rs.getString(AddressConstants.STATE.toString()));
+            address.setCity(rs.getString(AddressConstants.CITY.toString()));
             addresses.add(address);
 
             if (admission == null) {

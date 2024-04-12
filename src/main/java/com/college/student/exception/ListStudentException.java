@@ -1,9 +1,9 @@
 package com.college.student.exception;
 
-public class StudentUpdateException extends RuntimeException{
+public class ListStudentException extends RuntimeException{
     private String errorMessage;
     private int errorCode;
-    public StudentUpdateException(String errorMessage, int errorCode) {
+    public ListStudentException(String errorMessage, int errorCode) {
         super(errorMessage);
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;

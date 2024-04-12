@@ -1,4 +1,4 @@
-package com.college.student.constant;
+package com.college.student.repository.constants;
 
 public enum AddressType {
     PERMANENT,

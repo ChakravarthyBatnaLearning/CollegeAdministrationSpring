@@ -2,7 +2,7 @@ package com.college.student.pojo;
 
 import java.io.Serializable;
 
-public class ErrorResponse implements Serializable {
+public class ErrorResponse extends Exception implements Serializable {
     private int code;
     private String message;
     public ErrorResponse() {

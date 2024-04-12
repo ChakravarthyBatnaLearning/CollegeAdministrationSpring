@@ -46,7 +46,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             } else {
                 return jdbcTemplate.query(LIST_QUERY, new StudentRowMapper());
             }
-        } catch (StudentListNotFoundException e) {
+        } catch (ListStudentException e) {
             logger.error("Error While getting the List of Students");
             throw e;
         }
@@ -92,11 +92,11 @@ public class StudentRepositoryImpl implements StudentRepository {
             int rowsEffected = jdbcTemplate.update(UPDATE_QUERY, student.getName(), student.getAge(), student.getPhoneNo(), student.getGender(), student.getRollNo());
             if (rowsEffected == 0) {
                 logger.error("No Student Found with RollNo : {}", student.getRollNo() + " To Execute Update Query");
-                throw new StudentUpdateException("No Student Found with RollNo : " + student.getRollNo(), HttpServletResponse.SC_NOT_FOUND);
+                throw new UpdateStudentException("No Student Found with RollNo : " + student.getRollNo(), HttpServletResponse.SC_NOT_FOUND);
             }
-        } catch (StudentUpdateException e) {
+        } catch (UpdateStudentException e) {
             logger.error("Error Occurred While Updating the Student {}", student);
-            throw new StudentUpdateException("Error updating student with roll number: " + student.getRollNo(), 404);
+            throw new UpdateStudentException("Error updating student with roll number: " + student.getRollNo(), 404);
         }
         return student;
     }

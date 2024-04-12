@@ -1,14 +1,14 @@
-package com.college.student.repository;
+package com.college.student.service;
 
 import com.college.student.repository.constants.AddressType;
 import com.college.student.pojo.Address;
 
 import java.util.List;
 
-public interface AddressRepository {
+public interface AddressService {
     boolean addStudentAddress(Address studentAddress, int studentRollNo);
 
-    public Address updateStudentAddressByRollNo(int rollNo, Address address, AddressType addressType);
+    Address updateStudentAddressByRollNo(int rollNo, Address address, AddressType addressType);
 
     boolean deleteAllStudentAddresses(int studentRoll);
 

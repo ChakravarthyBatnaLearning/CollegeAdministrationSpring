@@ -42,8 +42,8 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    @ExceptionHandler(value = {StudentUpdateException.class})
-    public ResponseEntity<Object> handleStudentUpdateException(StudentUpdateException ex, WebRequest request) {
+    @ExceptionHandler(value = {UpdateStudentException.class})
+    public ResponseEntity<Object> handleStudentUpdateException(UpdateStudentException ex, WebRequest request) {
 
         logger.error("ControllerAdvice ExceptionHandler catches the Exception: ", ex);
         logger.error("Error While Updating Student data : ", ex);
@@ -54,8 +54,8 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    @ExceptionHandler(value = {StudentListNotFoundException.class})
-    public ResponseEntity<Object> handleStudentListNotFoundException(StudentListNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(value = {ListStudentException.class})
+    public ResponseEntity<Object> handleStudentListNotFoundException(ListStudentException ex, WebRequest request) {
 
         logger.error("ControllerAdvice ExceptionHandler catches the Exception: ", ex);
         logger.error("Error While Getting Student List data : ", ex);

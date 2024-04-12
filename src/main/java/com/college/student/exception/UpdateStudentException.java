@@ -1,9 +1,9 @@
 package com.college.student.exception;
 
-public class StudentListNotFoundException extends RuntimeException{
+public class UpdateStudentException extends RuntimeException{
     private String errorMessage;
     private int errorCode;
-    public StudentListNotFoundException(String errorMessage, int errorCode) {
+    public UpdateStudentException(String errorMessage, int errorCode) {
         super(errorMessage);
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;

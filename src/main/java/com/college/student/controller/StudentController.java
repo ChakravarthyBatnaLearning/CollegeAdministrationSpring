@@ -1,10 +1,7 @@
 package com.college.student.controller;
 
-import com.college.student.constant.AddressType;
 import com.college.student.event.*;
 import com.college.student.exception.*;
-import com.college.student.pojo.Address;
-import com.college.student.pojo.Admission;
 import com.college.student.pojo.Student;
 import com.college.student.service.StudentService;
 import com.college.student.sort.StudentAgeAndGenderComparator;
@@ -19,7 +16,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8084")
@@ -44,8 +40,7 @@ public class StudentController {
         if (userSession.getAttribute(cookieValue) != null) {
             logger.info("User Found to be an Admin");
             try {
-                logger.info("Request Received to Add Student");
-                logger.info("Student Object Received : {}", student);
+                logger.info("Request Received to Add Student : {}", student);
                 studentService.addStudent(student);
                 applicationEventPublisher.publishEvent(new AddStudentEvent(this.getClass(), student));
                 logger.info("Added Student to DB");
@@ -59,11 +54,9 @@ public class StudentController {
 
     @GetMapping("/{rollNo}")
     @ResponseBody
-    public Student getStudentData(HttpServletRequest request, @PathVariable String rollNo) throws StudentListNotFoundException {
+    public Student getStudentData(HttpServletRequest request, @PathVariable String rollNo) throws ListStudentException {
         Student student = null;
-        logger.info("Request Received to Get the Student Details");
-        logger.info("rollNo received {}", rollNo);
-        logger.info("User name : {}", request.getSession(false).getAttribute("username"));
+        logger.info("Request Received to Get the Student Details with RollNo : {} and UserName : {}", rollNo, (String) request.getSession(false).getAttribute("username"));
         try {
             student = studentService.getCompleteStudentData(Integer.parseInt(rollNo));
             if (student == null) {
@@ -80,41 +73,40 @@ public class StudentController {
 
     }
 
-    @GetMapping("/list/{flag}")
+    @GetMapping("/list")
     @ResponseBody
-    public List<Student> getStudentList(@PathVariable String flag) throws StudentListNotFoundException {
-        logger.info("Request Received to Get the Student Details");
+    public List<Student> getStudentList(@RequestParam(value = "flag", required = false, defaultValue = "false") String flag) throws ListStudentException {
         List<Student> studentList = null;
         logger.info("Request Received to List All Students");
         try {
             studentList = studentService.listStudents(flag);
-            if (studentList == null)
-                throw new StudentListNotFoundException("No Students Are Found", HttpServletResponse.SC_NOT_FOUND);
+            if (studentList == null) {
+                logger.info("No Student Data in Database, Returning EmptyList");
+                return studentList;
+            }
             logger.info("Student List Received : {}", studentList);
             applicationEventPublisher.publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
             logger.info("Student List  : {}", studentList);
-        } catch (StudentListNotFoundException e) {
-            logger.error("Exception Occurred while Requesting the to List Student Data : ", e);
-            throw e;
+        } catch (ListStudentException e) {
+            logger.error("Exception Occurred while Requesting to List Student Data : ", e);
         }
-        Collections.sort(studentList, new StudentAgeAndGenderComparator());
+        assert studentList != null;
+        studentList.sort(new StudentAgeAndGenderComparator());
         return studentList;
     }
 
     @PutMapping()
     @ResponseBody
-    public Student updateStudentData(@RequestBody Student student) throws StudentUpdateException {
-        logger.info("Request Received to Update the Student Data");
-
+    public Student updateStudentData(@RequestBody Student student) throws UpdateStudentException {
         try {
             logger.info("Request to Update the Student : {}", student);
             student = studentService.updateStudentDetailsByRollNo(student);
             if (student == null)
-                throw new StudentUpdateException("Error While Updating the Student", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                throw new UpdateStudentException("Error While Updating the Student", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.info("Request Successfully Completed for Update for Student {}", student);
             applicationEventPublisher.publishEvent(new UpdateStudentEvent(this.getClass(), student));
             //        EventHandler.getInstance(false).publishEvent(new UpdateStudentEvent(this.getClass(), student));
-        } catch (StudentUpdateException e) {
+        } catch (UpdateStudentException e) {
             logger.error("Exception Occurred while Updating the StudentByRollNo : ", e);
             throw e;
         }
@@ -138,10 +130,4 @@ public class StudentController {
         }
         return rollNo;
     }
-
-    // Adding Student Address
-
-
-    // Adding Student Admission
-
 }

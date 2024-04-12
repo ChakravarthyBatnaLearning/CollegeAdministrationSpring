@@ -1,10 +1,9 @@
 package com.college.student.pojo;
 
-import com.college.student.constant.AddressType;
+import com.college.student.repository.constants.AddressType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
 public class Address implements Cloneable, Serializable, Comparable<Address> {

@@ -1,6 +1,6 @@
 package com.college.student.repository.impl;
 
-import com.college.student.constant.AddressType;
+import com.college.student.repository.constants.AddressType;
 import com.college.student.pojo.Address;
 import com.college.student.repository.AddressRepository;
 import com.college.student.repository.mappers.AddressRowMapper;

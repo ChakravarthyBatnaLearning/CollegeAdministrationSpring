@@ -39,6 +39,16 @@
         <constructor-arg ref="addressRepository"/>
         <constructor-arg ref="admissionRepository"/>
     </bean>
+
+    <bean id="addressService" class="com.college.student.service.impl.AddressServiceImpl">
+        <constructor-arg ref="addressRepository"/>
+    </bean>
+
+    <bean id="admissionService" class="com.college.student.service.impl.AdmissionServiceImpl">
+        <constructor-arg ref="admissionRepository"/>
+    </bean>
+
+
     <bean id="getStudentEventListener" class="com.college.student.listener.GetStudentEventListener"/>
     <bean id="addStudentEventListener" class="com.college.student.listener.AddStudentEventListener"/>
     <bean id="deleteStudentEventListener" class="com.college.student.listener.DeleteStudentEventListener"/>
