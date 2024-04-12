@@ -1,20 +1,12 @@
 package com.college.student.exception;
 
-public class ListStudentException extends RuntimeException{
+public class DuplicateAdmissionFoundException extends Exception{
     private String errorMessage;
     private int errorCode;
-    public ListStudentException(String errorMessage, int errorCode) {
+    public DuplicateAdmissionFoundException(String errorMessage, int errorCode) {
         super(errorMessage);
+        this.errorCode = errorCode;
         this.errorMessage = errorMessage;
-        this.errorCode = errorCode;
-    }
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
     }
 
     public String getErrorMessage() {
@@ -23,5 +15,13 @@ public class ListStudentException extends RuntimeException{
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
     }
 }

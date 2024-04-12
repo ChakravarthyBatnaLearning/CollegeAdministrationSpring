@@ -1,9 +1,9 @@
 package com.college.student.exception;
 
-public class UpdateStudentException extends RuntimeException{
+public class DuplicateRollNoFoundException extends RuntimeException{
     private String errorMessage;
     private int errorCode;
-    public UpdateStudentException(String errorMessage, int errorCode) {
+    public DuplicateRollNoFoundException(String errorMessage, int errorCode) {
         super(errorMessage);
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;

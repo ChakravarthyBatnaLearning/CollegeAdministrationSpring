@@ -1,7 +1,9 @@
 package com.college.student.repository.impl;
 
 import com.college.student.constant.StorageType;
-import com.college.student.exception.*;
+import com.college.student.exception.DuplicateRollNoFoundException;
+import com.college.student.exception.ServerUnavailableException;
+import com.college.student.exception.StudentNotFoundException;
 import com.college.student.pojo.Student;
 import com.college.student.repository.StudentRepository;
 import com.college.student.repository.mappers.ListStudentsWithAssociationsExtractor;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -39,86 +42,108 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public List<Student> listStudents(String flag) {
+    public List<Student> listStudents(String flag) throws ServerUnavailableException {
+        List<Student> studentList = null;
         try {
             if (flag.equals("true")) {
-                return jdbcTemplate.query(SELECT_STUDENTS_WITH_ASSOCIATIONS, new ListStudentsWithAssociationsExtractor());
+                studentList = jdbcTemplate.query(SELECT_STUDENTS_WITH_ASSOCIATIONS, new ListStudentsWithAssociationsExtractor());
             } else {
-                return jdbcTemplate.query(LIST_QUERY, new StudentRowMapper());
+                studentList = jdbcTemplate.query(LIST_QUERY, new StudentRowMapper());
             }
-        } catch (ListStudentException e) {
-            logger.error("Error While getting the List of Students");
-            throw e;
+        } catch (DataAccessException e) {
+            logger.error("Error While getting the List of Students",e);
+            throw new ServerUnavailableException("Server Unavailable Please Try After Some Time", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+        return studentList;
     }
 
 
     @Override
-    public void addStudent(@org.jetbrains.annotations.NotNull Student student) {
-        int studentRowsEffected = 0;
+    public void addStudent(@org.jetbrains.annotations.NotNull Student student) throws DuplicateRollNoFoundException, ServerUnavailableException {
         try {
-
+            int studentRowsEffected = 0;
             studentRowsEffected = jdbcTemplate.update(INSERT_QUERY, student.getRollNo(), student.getName(),
                     student.getAge(), student.getPhoneNo(), student.getGender());
 
             if (studentRowsEffected == 0) {
-                logger.error("Exception While Adding the Student {}", student);
-                throw new AddStudentException("Error Occured While Adding the Student " + student, 500);
+                logger.error("Duplicate Student Found {}", student);
+                throw new DuplicateRollNoFoundException("Error Occurred While Adding the Student " + student, 500);
             }
-
-        } catch (AddStudentException e) {
-            logger.error("Error While Adding the Student : {}", student);
-            throw e;
+        } catch (DataAccessException e) {
+            logger.error("Error While Adding Student Data ",e);
+            throw new ServerUnavailableException("Error while Adding Student", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
-    public Student deleteStudent(int rollNo) {
-        Student student;
+    public Student deleteStudent(int rollNo) throws StudentNotFoundException, ServerUnavailableException {
+        Student student = null;
+        int rowsEffected = 0;
         try {
             student = getStudentData(rollNo);
-            jdbcTemplate.update(DELETE_QUERY, rollNo);
+            rowsEffected = jdbcTemplate.update(DELETE_QUERY, rollNo);
+            if (rowsEffected == 0) {
+                logger.error("Student having rollNo : {} not Found in Database to Delete the Reocrd",rollNo);
+                throw new StudentNotFoundException("Student With RollNo : " + rollNo + " Not Found", HttpServletResponse.SC_NOT_FOUND);
+            }
             logger.info("Student Successfully Deleted");
-        } catch (DeleteStudentException e) {
-            logger.error("Error While Deleting the Student with RollNo : {}", rollNo);
-            throw e;
+        } catch (DataAccessException e) {
+            logger.error("Unable to Delete the Student Record",e);
+            throw new ServerUnavailableException("Unable to Delete the Student with RollNo : " + rollNo, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         return student;
     }
 
     @Override
-    public Student updateStudentByRollNo(Student student) {
+    public Student updateStudentByRollNo(Student student) throws ServerUnavailableException, StudentNotFoundException {
         try {
             int rowsEffected = jdbcTemplate.update(UPDATE_QUERY, student.getName(), student.getAge(), student.getPhoneNo(), student.getGender(), student.getRollNo());
             if (rowsEffected == 0) {
                 logger.error("No Student Found with RollNo : {}", student.getRollNo() + " To Execute Update Query");
-                throw new UpdateStudentException("No Student Found with RollNo : " + student.getRollNo(), HttpServletResponse.SC_NOT_FOUND);
+                throw new StudentNotFoundException("Student With RollNo : " + student.getRollNo() + " Not Found to Update", HttpServletResponse.SC_NOT_FOUND);
             }
-        } catch (UpdateStudentException e) {
-            logger.error("Error Occurred While Updating the Student {}", student);
-            throw new UpdateStudentException("Error updating student with roll number: " + student.getRollNo(), 404);
+        } catch (DataAccessException e) {
+            logger.error("Error Occurred While Updating the Student ", e);
+            throw new ServerUnavailableException("Unable to Update the Student with RollNo : " + student.getRollNo(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         return student;
     }
 
     @Override
-    public Student getStudentData(int studentRollNo) {
+    public Student getStudentData(int studentRollNo) throws StudentNotFoundException, ServerUnavailableException {
+        Student student = null;
         try {
-            return jdbcTemplate.queryForObject(GET_QUERY, new Object[]{studentRollNo}, new StudentRowMapper());
-        } catch (StudentNotFoundException e) {
-            logger.error("Error While Getting Student with RollNo : {} exception", studentRollNo);
-            throw e;
+            student = jdbcTemplate.queryForObject(GET_QUERY, new Object[]{studentRollNo}, new StudentRowMapper());
+            if (student == null) {
+                logger.error("Student With RollNo : {} Not Found", student);
+                throw new StudentNotFoundException("Student With RollNo : " + studentRollNo + " Not Found to Retrieve his Address", HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (DataAccessException e) {
+            logger.error("Error While Getting Student with RollNo : {} exception", studentRollNo,e);
+            throw new ServerUnavailableException("Error While Getting Student with RollNo :" + studentRollNo, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+        return student;
 
     }
 
     @Override
-    public Student getStudentDataWithAssociations(int studentRollNo) {
-        return jdbcTemplate.query(SELECT_STUDENT_WITH_ASSOCIATIONS, new Object[]{studentRollNo}, new StudentWithAssociationsRowExtractor());
+    public Student getStudentDataWithAssociations(int studentRollNo) throws StudentNotFoundException, ServerUnavailableException {
+        Student student = null;
+        try {
+            student = jdbcTemplate.query(SELECT_STUDENT_WITH_ASSOCIATIONS, new Object[]{studentRollNo}, new StudentWithAssociationsRowExtractor());
+            if (student == null) {
+                logger.error("Student Not Found in database");
+                throw new StudentNotFoundException("Student With RollNo : " + studentRollNo + " Not Found", HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (DataAccessException e) {
+            logger.error("Error While Getting student info",e);
+            throw new ServerUnavailableException("Error While Getting Student Data having RollNo : " + studentRollNo, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return student;
     }
 
     @Override
-    public boolean isExist(int rollNo) {
+    public boolean isExist(int rollNo) throws ServerUnavailableException, StudentNotFoundException {
         return getStudentData(rollNo) != null;
     }
 }

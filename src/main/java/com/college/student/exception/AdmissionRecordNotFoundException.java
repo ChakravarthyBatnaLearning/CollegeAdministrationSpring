@@ -1,9 +1,10 @@
 package com.college.student.exception;
 
-public class DeleteStudentException extends RuntimeException{
+public class AdmissionRecordNotFoundException extends Exception{
     private String errorMessage;
     private int errorCode;
-    public DeleteStudentException(String errorMessage, int errorCode) {
+
+    public AdmissionRecordNotFoundException(String errorMessage, int errorCode) {
         super(errorMessage);
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;

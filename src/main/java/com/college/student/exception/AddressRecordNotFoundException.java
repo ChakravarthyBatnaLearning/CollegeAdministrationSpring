@@ -1,9 +1,10 @@
 package com.college.student.exception;
 
-public class AddStudentException extends RuntimeException{
+public class AddressRecordNotFoundException extends Exception{
     private String errorMessage;
     private int errorCode;
-    public AddStudentException(String errorMessage, int errorCode) {
+
+    public AddressRecordNotFoundException(String errorMessage, int errorCode) {
         super(errorMessage);
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;

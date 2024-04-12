@@ -3,6 +3,7 @@ package com.college.student.service.impl;
 
 import com.college.student.cache.lru_dll.LRUCache;
 import com.college.student.constant.StorageType;
+import com.college.student.exception.*;
 import com.college.student.pojo.Address;
 import com.college.student.pojo.Student;
 import com.college.student.repository.AddressRepository;
@@ -11,6 +12,7 @@ import com.college.student.repository.StudentRepository;
 import com.college.student.repository.factory.StudentRepositoryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         this.studentRepository = studentRepositoryFactory.getStudentRepositoryInstance(storageType);
     }
 
-    public void addStudent(Student student) {
+    public void addStudent(Student student) throws DuplicateRollNoFoundException, ServerUnavailableException, DuplicateAdmissionFoundException {
         this.studentRepository.addStudent(student);
         //adding address if it is not null;
         if (student.getAddressList() != null) {
@@ -43,11 +45,12 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         }
     }
 
-    public List<Student> listStudents(String flag) {
+    public List<Student> listStudents(String flag) throws ServerUnavailableException {
         return this.studentRepository.listStudents(flag);
     }
 
-    public Student deleteStudentByRollNo(int rollNo) {
+    public Student deleteStudentByRollNo(int rollNo) throws ServerUnavailableException,
+            StudentNotFoundException, AdmissionRecordNotFoundException, AddressRecordNotFoundException {
         Student student = getStudentByRollNo(rollNo);
         if (student == null) return null;
         if (student.getAdmission() != null) admissionRepository.deleteStudentAdmission(rollNo);
@@ -57,7 +60,7 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         return this.studentRepository.deleteStudent(rollNo);
     }
 
-    public Student updateStudentDetailsByRollNo(Student updateStudent) {
+    public Student updateStudentDetailsByRollNo(Student updateStudent) throws ServerUnavailableException, StudentNotFoundException, AddressRecordNotFoundException, AdmissionRecordNotFoundException {
         if (updateStudent.getAddressList() != null) {
             for (Address address : updateStudent.getAddressList()) {
                 addressRepository.updateStudentAddressByRollNo(updateStudent.getRollNo(), address, address.getAddressType());
@@ -69,7 +72,7 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         return this.studentRepository.updateStudentByRollNo(updateStudent);
     }
 
-    public Student getStudentByRollNo(int studentRollNo) {
+    public Student getStudentByRollNo(int studentRollNo) throws ServerUnavailableException,StudentNotFoundException {
         Student student = studentLRUCache.get(studentRollNo);
         if (student == null) {
             student = this.studentRepository.getStudentData(studentRollNo);
@@ -79,12 +82,12 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         return student;
     }
 
-    public boolean isStudentExist(int rollNo) {
+    public boolean isStudentExist(int rollNo) throws ServerUnavailableException, StudentNotFoundException {
         return this.studentRepository.isExist(rollNo);
     }
 
     @Override
-    public Student getCompleteStudentData(int studentRollNo) {
+    public Student getCompleteStudentData(int studentRollNo) throws  StudentNotFoundException, ServerUnavailableException {
         return studentRepository.getStudentDataWithAssociations(studentRollNo);
     }
 }
