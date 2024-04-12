@@ -19,9 +19,11 @@ public class InFileStudentRepositoryImpl implements StudentRepository {
         this.fileUtils = new FileUtils<>(file);
     }
 
+
+
     @Override
-    public List<Student> listStudents() {
-        return this.fileUtils.readObject();
+    public List<Student> listStudents(String flag) {
+        return null;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class InFileStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public Student getCompleteStudentData(int studentRollNo) {
+    public Student getStudentDataWithAssociations(int studentRollNo) {
         return null;
     }
 

@@ -1,5 +1,6 @@
 package com.college.student.repository;
 
+import com.college.student.constant.AddressType;
 import com.college.student.pojo.Address;
 
 import java.util.List;
@@ -7,9 +8,7 @@ import java.util.List;
 public interface AddressRepository {
     boolean addStudentAddress(Address studentAddress, int studentRollNo);
 
-    Address updateStudentPermanetAddress(Address studentAddress, int studentRollNo);
-
-    Address updateStudentTemporaryAddress(Address studentAddress, int studentRollNo);
+    public Address updateStudentAddressByRollNo(int rollNo, Address address, AddressType addressType);
 
     boolean deleteAllStudentAddresses(int studentRoll);
 
@@ -17,7 +16,5 @@ public interface AddressRepository {
 
     List<Address> getStudentAddresses(int studentRollNo);
 
-    Address getStudentPermanentAddress(int studentRollNo);
-
-    Address getStudentTemporaryAddress(int studentRollNo);
+    Address getStudentAddressByRollNo(int rollNo, AddressType addressType);
 }

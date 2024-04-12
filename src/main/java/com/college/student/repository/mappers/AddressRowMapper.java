@@ -1,4 +1,4 @@
-package com.college.student.utils;
+package com.college.student.repository.mappers;
 
 import com.college.student.constant.AddressType;
 import com.college.student.pojo.Address;

@@ -12,12 +12,18 @@ public class InMemoryStudentRepositoryImpl implements StudentRepository {
         return storageType == StorageType.IN_MEMORY;
     }
     private final List<Student> studentList = new ArrayList<>();
+
+    @Override
+    public List<Student> listStudents(String flag) {
+        return null;
+    }
+
     @Override
     public void addStudent(Student student) {  //adding student in list;
         studentList.add(student);
     }
 
-    @Override
+
     public List<Student> listStudents() {
         return this.studentList;
     }  //printing/retrieving all the student's from list;
@@ -62,7 +68,7 @@ public class InMemoryStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public Student getCompleteStudentData(int studentRollNo) {
+    public Student getStudentDataWithAssociations(int studentRollNo) {
         return null;
     }
 

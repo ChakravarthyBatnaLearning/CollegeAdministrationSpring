@@ -30,9 +30,11 @@ public class InCSVFileStudentRepositoryImpl implements StudentRepository {
         csvReadAndWriter = new CSVReadAndWriter(this.file);
     }
 
+
+
     @Override
-    public List<Student> listStudents() {
-        return csvReadAndWriter.readStudents();
+    public List<Student> listStudents(String flag) {
+        return null;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class InCSVFileStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public Student getCompleteStudentData(int studentRollNo) {
+    public Student getStudentDataWithAssociations(int studentRollNo) {
         return null;
     }
 

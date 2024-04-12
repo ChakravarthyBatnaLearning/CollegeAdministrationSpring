@@ -1,5 +1,6 @@
 package com.college.student.service;
 
+import com.college.student.constant.AddressType;
 import com.college.student.pojo.Address;
 import com.college.student.pojo.Admission;
 import com.college.student.pojo.Student;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface StudentService {
     public void addStudent(Student student);
 
-    public List<Student> listStudents();
+    public List<Student> listStudents(String flag);
 
     public Student deleteStudentByRollNo(int rollNo);
 
@@ -22,9 +23,7 @@ public interface StudentService {
     // address repository methods
     boolean addStudentAddress(Address studentAddress, int studentRollNo);
 
-    Address updateStudentPermanetAddress(Address studentAddress, int studentRollNo);
-
-    Address updateStudentTemporaryAddress(Address studentAddress, int studentRollNo);
+    Address updateStudentAddressByRollNo(int rollNo, Address address, AddressType addressType);
 
     boolean deleteAllStudentAddresses(int studentRoll);
 
@@ -32,9 +31,7 @@ public interface StudentService {
 
     List<Address> getStudentAddresses(int studentRollNo);
 
-    Address getStudentPermanentAddress(int studentRollNo);
-
-    Address getStudentTemporaryAddress(int studentRollNo);
+    Address getStudentAddressByRollNo(int rollNo, AddressType addressType);
 
     //admission repository method's
     boolean addStudentAdmission(Admission admission, int studentRollNo);

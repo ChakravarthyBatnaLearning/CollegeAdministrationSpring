@@ -1,8 +1,11 @@
 package com.college.student.pojo;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Admission {
+public class Admission implements Cloneable, Serializable, Comparable<Admission> {
     private String course;
     private int section;
     private int admissionYear;
@@ -66,5 +69,10 @@ public class Admission {
     @Override
     public int hashCode() {
         return Objects.hash(course, section, admissionYear, rollNo);
+    }
+
+    @Override
+    public int compareTo(@NotNull Admission o) {
+        return Integer.compare(o.getRollNo(), rollNo);
     }
 }

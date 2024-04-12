@@ -16,8 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+
 public class StudentServiceImpl implements com.college.student.service.StudentService {
     private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
+
     private static final LRUCache<Integer, Student> lruCache = new LRUCache<>(5);
     private final StudentRepository studentRepository;
     private final AddressRepository addressRepository;
@@ -45,8 +47,8 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         }
     }
 
-    public List<Student> listStudents() {
-        return this.studentRepository.listStudents();
+    public List<Student> listStudents(String flag) {
+        return this.studentRepository.listStudents(flag);
     }
 
     public Student deleteStudentByRollNo(int rollNo) {
@@ -60,10 +62,12 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
 
     public Student updateStudentDetailsByRollNo(Student updateStudent) {
         if (updateStudent.getAddressList() != null) {
-             for (Address address : updateStudent.getAddressList()) {
-                 if (address.getAddressType() == AddressType.PERMANENT) addressRepository.updateStudentPermanetAddress(address,updateStudent.getRollNo());
-                 else addressRepository.updateStudentTemporaryAddress(address,updateStudent.getRollNo());
-             }
+            for (Address address : updateStudent.getAddressList()) {
+                updateStudentAddressByRollNo(updateStudent.getRollNo(), address, address.getAddressType());
+            }
+        }
+        if (updateStudent.getAdmission() != null) {
+            updateStudentAdmission(updateStudent.getAdmission(), updateStudent.getRollNo());
         }
         return this.studentRepository.updateStudentByRollNo(updateStudent);
     }
@@ -88,13 +92,8 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
     }
 
     @Override
-    public Address updateStudentPermanetAddress(Address studentAddress, int studentRollNo) {
-        return addressRepository.updateStudentPermanetAddress(studentAddress, studentRollNo);
-    }
-
-    @Override
-    public Address updateStudentTemporaryAddress(Address studentAddress, int studentRollNo) {
-        return addressRepository.updateStudentTemporaryAddress(studentAddress, studentRollNo);
+    public Address updateStudentAddressByRollNo(int rollNo, Address address, AddressType addressType) {
+        return addressRepository.updateStudentAddressByRollNo(rollNo, address, addressType);
     }
 
     @Override
@@ -113,13 +112,8 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
     }
 
     @Override
-    public Address getStudentPermanentAddress(int studentRollNo) {
-        return addressRepository.getStudentPermanentAddress(studentRollNo);
-    }
-
-    @Override
-    public Address getStudentTemporaryAddress(int studentRollNo) {
-        return addressRepository.getStudentTemporaryAddress(studentRollNo);
+    public Address getStudentAddressByRollNo(int rollNo, AddressType addressType) {
+        return null;
     }
 
     @Override
@@ -144,6 +138,6 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
 
     @Override
     public Student getCompleteStudentData(int studentRollNo) {
-        return studentRepository.getCompleteStudentData(studentRollNo);
+        return studentRepository.getStudentDataWithAssociations(studentRollNo);
     }
 }

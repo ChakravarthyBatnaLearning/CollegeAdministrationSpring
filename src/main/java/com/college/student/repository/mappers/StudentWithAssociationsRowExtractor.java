@@ -1,18 +1,17 @@
-package com.college.student.utils;
+package com.college.student.repository.mappers;
 
 import com.college.student.pojo.Address;
 import com.college.student.pojo.Admission;
 import com.college.student.pojo.Student;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompleteStudentDataMapper implements ResultSetExtractor<Student> {
+public class StudentWithAssociationsRowExtractor implements ResultSetExtractor<Student> {
     @Override
     public Student extractData(ResultSet rs) throws SQLException, DataAccessException {
         Student student = null;
