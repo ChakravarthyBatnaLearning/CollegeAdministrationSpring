@@ -22,7 +22,7 @@ public class InFileStudentRepositoryImpl implements StudentRepository {
 
 
     @Override
-    public List<Student> listStudents(String flag) {
+    public List<Student> listStudents(boolean flag) {
         return null;
     }
 

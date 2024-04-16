@@ -30,6 +30,15 @@ public class LRUCacheWithHM<K,V>{
         }
         return cacheMap.get(key);
     }
+    public Map<K,V> getEldestElement() {
+        Map<K,V> result = new HashMap<>();
+        K key = cacheDeque.getFirst();
+        if (key != null) {
+            V value = cacheMap.get(key);
+            result.put(key,value);
+        }
+        return result;
+    }
     public HashMap<K,V> getAll() {
         HashMap<K,V> cacheList = new LinkedHashMap<>();
         for (K key : cacheDeque) {

@@ -1,7 +1,5 @@
 package com.college.student.pojo;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -72,7 +70,7 @@ public class Admission implements Cloneable, Serializable, Comparable<Admission>
     }
 
     @Override
-    public int compareTo(@NotNull Admission o) {
+    public int compareTo(Admission o) {
         return Integer.compare(o.getRollNo(), rollNo);
     }
 }

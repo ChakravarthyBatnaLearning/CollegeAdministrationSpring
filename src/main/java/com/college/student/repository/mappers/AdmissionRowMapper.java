@@ -1,7 +1,8 @@
 package com.college.student.repository.mappers;
 
 import com.college.student.pojo.Admission;
-import org.jetbrains.annotations.NotNull;
+import com.college.student.repository.constants.AdmissionConstants;
+
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -10,12 +11,12 @@ import java.sql.SQLException;
 public class AdmissionRowMapper implements RowMapper<Admission> {
 
     @Override
-    public Admission mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
+    public Admission mapRow( ResultSet rs, int rowNum) throws SQLException {
         Admission admission = new Admission();
-        admission.setCourse(rs.getString("COURSE"));
-        admission.setSection(rs.getInt("SECTION"));
-        admission.setAdmissionYear(rs.getInt("ADMISSION_YEAR"));
-        admission.setRollNo(rs.getInt("ROLL_NO"));
+        admission.setCourse(rs.getString(AdmissionConstants.COURSE.toString()));
+        admission.setSection(rs.getInt(AdmissionConstants.SECTION.toString()));
+        admission.setAdmissionYear(rs.getInt(AdmissionConstants.ADMISSION_YEAR.toString()));
+        admission.setRollNo(rs.getInt(AdmissionConstants.ROLL_NO.toString()));
         return admission;
     }
 }

@@ -45,8 +45,8 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         }
     }
 
-    public List<Student> listStudents(String flag) throws ServerUnavailableException {
-        return this.studentRepository.listStudents(flag);
+    public List<Student> listStudents(boolean withAssociations) throws ServerUnavailableException {
+        return this.studentRepository.listStudents(withAssociations);
     }
 
     public Student deleteStudentByRollNo(int rollNo) throws ServerUnavailableException,

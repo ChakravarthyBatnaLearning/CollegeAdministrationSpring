@@ -1,7 +1,7 @@
 package com.college.student.repository.mappers;
 
 import com.college.student.pojo.Student;
-import org.jetbrains.annotations.NotNull;
+import com.college.student.repository.constants.StudentConstants;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -11,15 +11,15 @@ import java.sql.SQLException;
 @Component
 public class StudentRowMapper implements RowMapper<Student> {
     @Override
-    public Student mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
+    public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
         Student student = new Student();
 
         //mapping student;
-        student.setRollNo(rs.getInt("ROLL_NO"));
-        student.setName(rs.getString("NAME"));
-        student.setAge(rs.getByte("AGE"));
-        student.setPhoneNo(rs.getLong("PHONE_NUMBER"));
-        student.setGender(rs.getString("GENDER"));
+        student.setRollNo(rs.getInt(StudentConstants.ROLL_NO.toString()));
+        student.setName(rs.getString(StudentConstants.NAME.toString()));
+        student.setAge(rs.getByte(StudentConstants.AGE.toString()));
+        student.setPhoneNo(rs.getLong(StudentConstants.PHONE_NUMBER.toString()));
+        student.setGender(rs.getString(StudentConstants.GENDER.toString()));
         return student;
     }
 }

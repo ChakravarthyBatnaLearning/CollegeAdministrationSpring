@@ -4,6 +4,8 @@ import com.college.student.pojo.Address;
 import com.college.student.pojo.Admission;
 import com.college.student.pojo.Student;
 import com.college.student.repository.constants.AddressConstants;
+import com.college.student.repository.constants.AdmissionConstants;
+import com.college.student.repository.constants.StudentConstants;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -22,11 +24,11 @@ public class StudentWithAssociationsRowExtractor implements ResultSetExtractor<S
         while (rs.next()) {
             if (student == null) {
                 student = new Student();
-                student.setRollNo(rs.getInt("ROLL_NO"));
-                student.setName(rs.getString("NAME"));
-                student.setAge(rs.getByte("AGE"));
-                student.setPhoneNo(rs.getLong("PHONE_NUMBER"));
-                student.setGender(rs.getString("GENDER"));
+                student.setRollNo(rs.getInt(StudentConstants.ROLL_NO.toString()));
+                student.setName(rs.getString(StudentConstants.NAME.toString()));
+                student.setAge(rs.getByte(StudentConstants.AGE.toString()));
+                student.setPhoneNo(rs.getLong(StudentConstants.PHONE_NUMBER.toString()));
+                student.setGender(rs.getString(StudentConstants.GENDER.toString()));
             }
 
             Address address = new Address();
@@ -37,9 +39,9 @@ public class StudentWithAssociationsRowExtractor implements ResultSetExtractor<S
 
             if (admission == null) {
                 admission = new Admission();
-                admission.setCourse(rs.getString("COURSE"));
-                admission.setSection(rs.getInt("SECTION"));
-                admission.setAdmissionYear(rs.getInt("ADMISSION_YEAR"));
+                admission.setCourse(rs.getString(AdmissionConstants.COURSE.toString()));
+                admission.setSection(rs.getInt(AdmissionConstants.SECTION.toString()));
+                admission.setAdmissionYear(rs.getInt(AdmissionConstants.ADMISSION_YEAR.toString()));
             }
         }
 

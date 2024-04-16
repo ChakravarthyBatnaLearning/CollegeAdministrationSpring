@@ -4,6 +4,8 @@ import com.college.student.repository.constants.AddressConstants;
 import com.college.student.pojo.Address;
 import com.college.student.pojo.Admission;
 import com.college.student.pojo.Student;
+import com.college.student.repository.constants.AdmissionConstants;
+import com.college.student.repository.constants.StudentConstants;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -21,16 +23,16 @@ public class ListStudentsWithAssociationsExtractor implements ResultSetExtractor
         Student currentStudent = null;
 
         while (rs.next()) {
-            int rollNo = rs.getInt("ROLL_NO");
+            int rollNo = rs.getInt(StudentConstants.ROLL_NO.toString());
 
             // If currentStudent is null or the rollNo changes, create a new Student object
             if (currentStudent == null || !(studentMap.containsKey(rollNo))) {
                 currentStudent = new Student();
                 currentStudent.setRollNo(rollNo);
-                currentStudent.setName(rs.getString("NAME"));
-                currentStudent.setAge(rs.getByte("AGE"));
-                currentStudent.setPhoneNo(rs.getLong("PHONE_NUMBER"));
-                currentStudent.setGender(rs.getString("GENDER"));
+                currentStudent.setName(rs.getString(StudentConstants.NAME.toString()));
+                currentStudent.setAge(rs.getByte(StudentConstants.AGE.toString()));
+                currentStudent.setPhoneNo(rs.getLong(StudentConstants.PHONE_NUMBER.toString()));
+                currentStudent.setGender(rs.getString(StudentConstants.GENDER.toString()));
                 currentStudent.setAddressList(new ArrayList<>()); // Initialize address list
                 currentStudent.setAdmission(new Admission()); // Initialize admission
                 studentMap.put(currentStudent.getRollNo(),currentStudent);
@@ -44,9 +46,9 @@ public class ListStudentsWithAssociationsExtractor implements ResultSetExtractor
             currentStudent.getAddressList().add(address);
 
             // Set admission details for the current student
-            currentStudent.getAdmission().setCourse(rs.getString("COURSE"));
-            currentStudent.getAdmission().setSection(rs.getInt("SECTION"));
-            currentStudent.getAdmission().setAdmissionYear(rs.getInt("ADMISSION_YEAR"));
+            currentStudent.getAdmission().setCourse(rs.getString(AdmissionConstants.COURSE.toString()));
+            currentStudent.getAdmission().setSection(rs.getInt(AdmissionConstants.SECTION.toString()));
+            currentStudent.getAdmission().setAdmissionYear(rs.getInt(AdmissionConstants.ADMISSION_YEAR.toString()));
         }
 
         return new ArrayList<>(studentMap.values());

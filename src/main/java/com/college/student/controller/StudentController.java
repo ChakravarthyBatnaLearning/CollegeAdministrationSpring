@@ -37,8 +37,7 @@ public class StudentController {
         HttpSession userSession = request.getSession(false);
         String cookieValue = HttpUtil.getCookieByName("my_auth_cookie", request);
         if (userSession.getAttribute(cookieValue) != null) {
-            logger.info("User Found to be an Admin");
-            logger.info("Request Received to Add Student : {}", student);
+            logger.info("User Found to be an Admin Request Received to Add Student : {}", student);
             studentService.addStudent(student);
             applicationEventPublisher.publishEvent(new AddStudentEvent(this.getClass(), student));
             logger.info("Added Student to DB");
@@ -48,9 +47,11 @@ public class StudentController {
 
     @GetMapping("/{rollNo}")
     @ResponseBody
-    public Student getStudentData(HttpServletRequest request, @PathVariable String rollNo) throws StudentNotFoundException, ServerUnavailableException {
+    public Student getStudentData(HttpServletRequest request, @PathVariable(value = "rollNo") String rollNo)
+            throws StudentNotFoundException, ServerUnavailableException {
         Student student = null;
-        logger.info("Request Received to Get the Student Details with RollNo : {} and UserName : {}", rollNo, (String) request.getSession(false).getAttribute("username"));
+        logger.info("Request Received to Get the Student Details with RollNo : {} and UserName : {}",
+                rollNo, (String) request.getSession(false).getAttribute("username"));
 
         student = studentService.getCompleteStudentData(Integer.parseInt(rollNo));
         logger.info("Student Details Received : {}", student);
@@ -60,15 +61,15 @@ public class StudentController {
 
     }
 
-    @GetMapping("/list")
+    @GetMapping()
     @ResponseBody
-    public List<Student> getStudentList(@RequestParam(value = "flag", required = false, defaultValue = "false") String flag) throws ServerUnavailableException {
+    public List<Student> getStudentList(@RequestParam(value = "withAssociations", required = false, defaultValue = "false") boolean withAssociations)
+            throws ServerUnavailableException {
         List<Student> studentList = null;
         logger.info("Request Received to List All Students");
-        studentList = studentService.listStudents(flag);
+        studentList = studentService.listStudents(withAssociations);
         logger.info("Student List Received : {}", studentList);
         applicationEventPublisher.publishEvent(new GetAllStudentEvent(this.getClass(), studentList));
-        logger.info("Student List  : {}", studentList);
         studentList.sort(new StudentAgeAndGenderComparator());
         return studentList;
     }
@@ -87,9 +88,7 @@ public class StudentController {
     @DeleteMapping("/{rollNo}")
     @ResponseBody
     public String deleteStudentData(@PathVariable String rollNo) throws ServerUnavailableException, StudentNotFoundException, AdmissionRecordNotFoundException, AddressRecordNotFoundException {
-        logger.info("Request to Delete Student Received");
-
-        logger.info("Successfully Received Student RollNo : {}", Integer.parseInt(rollNo));
+        logger.info("Request to Delete Student Successfully Received Student RollNo : {}" ,Integer.parseInt(rollNo));
         Student student = studentService.deleteStudentByRollNo(Integer.parseInt(rollNo));
         logger.info("Successfully Deleted the Student : {}", student);
         applicationEventPublisher.publishEvent(new DeleteStudentEvent(this.getClass(), student));

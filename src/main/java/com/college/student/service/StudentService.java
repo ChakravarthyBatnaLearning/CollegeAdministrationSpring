@@ -9,7 +9,7 @@ import java.util.List;
 public interface StudentService {
     public void addStudent(Student student) throws ServerUnavailableException, DuplicateAdmissionFoundException;
 
-    public List<Student> listStudents(String flag) throws ServerUnavailableException;
+    public List<Student> listStudents(boolean withAssociations) throws ServerUnavailableException;
 
     public Student deleteStudentByRollNo(int rollNo) throws ServerUnavailableException, StudentNotFoundException, AdmissionRecordNotFoundException, AddressRecordNotFoundException;
 

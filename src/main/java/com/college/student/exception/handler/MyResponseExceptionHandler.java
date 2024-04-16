@@ -23,7 +23,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Student Not Found Exception: ", ex);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getClass().getSimpleName() + ex.getErrorMessage());
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.NOT_FOUND, request);
     }
 
@@ -32,7 +32,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Admission Record Not Found Exception: ", ex);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(),ex.getClass().getSimpleName() +  ex.getErrorMessage());
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.NOT_FOUND, request);
     }
 
@@ -41,7 +41,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Address Record Not Found Exception: ", ex);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getClass().getSimpleName() + ex.getErrorMessage());
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.NOT_FOUND, request);
     }
 
@@ -50,7 +50,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Duplicate Admission Found Exception: ", ex);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getClass().getSimpleName() + ex.getErrorMessage());
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
@@ -59,7 +59,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Server Unavailable Exception: ", ex);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getClass().getSimpleName() + ex.getErrorMessage());
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.SERVICE_UNAVAILABLE, request);
     }
 
@@ -72,7 +72,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Error While Adding Student data : ", ex);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getErrorMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getClass().getSimpleName() + ex.getErrorMessage());
         logger.error("Sending ErrorResponse to Client : ", ex);
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
@@ -84,7 +84,7 @@ public class MyResponseExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Error While Handling URI : {},", request.getDescription(true), ex);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),ex.getClass().getSimpleName() +  HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         logger.error("Sending ErrorResponse to Client : ", ex);
         return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }

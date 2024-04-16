@@ -27,7 +27,8 @@ public class AdmissionRepositoryImpl implements AdmissionRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public boolean addStudentAdmission(Admission admission, int studentRollNo) throws ServerUnavailableException, DuplicateAdmissionFoundException {
+    public boolean addStudentAdmission(Admission admission, int studentRollNo)
+            throws ServerUnavailableException, DuplicateAdmissionFoundException {
         int rowsEffected = 0;
         try {
             rowsEffected = jdbcTemplate.update(INSERT_QUERY, admission.getCourse(), admission.getSection(), admission.getAdmissionYear(), studentRollNo);

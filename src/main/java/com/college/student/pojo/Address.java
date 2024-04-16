@@ -1,7 +1,6 @@
 package com.college.student.pojo;
 
 import com.college.student.repository.constants.AddressType;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -84,7 +83,7 @@ public class Address implements Cloneable, Serializable, Comparable<Address> {
     }
 
     @Override
-    public int compareTo(@NotNull Address o) {
+    public int compareTo(Address o) {
         return Integer.compare(rollNo, ((Address) o).rollNo);
     }
 }

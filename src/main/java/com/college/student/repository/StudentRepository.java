@@ -9,7 +9,7 @@ import java.util.List;
 //this is product interface
 public interface StudentRepository {
 
-    List<Student> listStudents(String flag) throws ServerUnavailableException;   //display all student details
+    List<Student> listStudents(boolean withAssociations) throws ServerUnavailableException;   //display all student details
     void  addStudent(Student student) throws ServerUnavailableException;  //adding student in list;
     Student deleteStudent(int rollNo) throws ServerUnavailableException,StudentNotFoundException;   //deleting specific student from list;
     Student updateStudentByRollNo(Student student) throws ServerUnavailableException,StudentNotFoundException;

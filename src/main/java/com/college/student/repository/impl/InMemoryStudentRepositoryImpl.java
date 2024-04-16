@@ -14,7 +14,7 @@ public class InMemoryStudentRepositoryImpl implements StudentRepository {
     private final List<Student> studentList = new ArrayList<>();
 
     @Override
-    public List<Student> listStudents(String flag) {
+    public List<Student> listStudents(boolean flag) {
         return null;
     }
 

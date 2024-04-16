@@ -1,7 +1,5 @@
 package com.college.student.pojo;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -85,7 +83,7 @@ public class Student implements Serializable, Comparable<Student>, Cloneable {
     }
 
     @Override
-    public int compareTo(@NotNull Student student) {
+    public int compareTo( Student student) {
         int results = Integer.compare(student.getRollNo(), rollNo);
         if (results == 0) results = name.compareTo(student.getName());
         if (results == 0) results = Integer.compare(age, student.getAge());
