@@ -7,7 +7,10 @@ import com.college.student.service.impl.UserServiceImpl;
 import com.college.student.utils.CookieHolder;
 import com.college.student.utils.HttpUtil;
 import com.google.gson.Gson;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -17,18 +20,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
+
 @Controller
-public class LoginServlet  {
+public class LoginServlet {
+    private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
     private final UserService userService;
 
     public LoginServlet() {
         this.userService = new UserServiceImpl();
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
-
-@PostMapping("/login")
+    @PostMapping("/login")
     public void authenticateUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         logger.info("Login Request Received");
         ErrorResponse errorResponse = null;
         try {

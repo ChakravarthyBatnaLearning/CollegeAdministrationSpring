@@ -50,6 +50,7 @@ public class AdmissionRepositoryImpl implements AdmissionRepository {
             admission = jdbcTemplate.queryForObject(GET_QUERY, new Object[]{rollNo}, new AdmissionRowMapper());
             if (admission == null) {
                 logger.error("Student With RollNo :" + rollNo + " Does Not Have Address");
+                return admission;
             }
         } catch (DataAccessException e) {
             logger.error("Error getting student admission: {}", e.getMessage());

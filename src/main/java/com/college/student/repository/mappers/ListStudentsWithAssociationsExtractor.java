@@ -18,37 +18,37 @@ import java.util.Map;
 
 public class ListStudentsWithAssociationsExtractor implements ResultSetExtractor<List<Student>> {
     @Override
-    public List<Student> extractData(ResultSet rs) throws SQLException, DataAccessException {
+    public List<Student> extractData(ResultSet studentResultSet) throws SQLException, DataAccessException {
         Map<Integer,Student> studentMap = new HashMap<>();
         Student currentStudent = null;
 
-        while (rs.next()) {
-            int rollNo = rs.getInt(StudentConstants.ROLL_NO.toString());
+        while (studentResultSet.next()) {
+            int rollNo = studentResultSet.getInt(StudentConstants.ROLL_NO.toString());
 
             // If currentStudent is null or the rollNo changes, create a new Student object
             if (currentStudent == null || !(studentMap.containsKey(rollNo))) {
                 currentStudent = new Student();
                 currentStudent.setRollNo(rollNo);
-                currentStudent.setName(rs.getString(StudentConstants.NAME.toString()));
-                currentStudent.setAge(rs.getByte(StudentConstants.AGE.toString()));
-                currentStudent.setPhoneNo(rs.getLong(StudentConstants.PHONE_NUMBER.toString()));
-                currentStudent.setGender(rs.getString(StudentConstants.GENDER.toString()));
+                currentStudent.setName(studentResultSet.getString(StudentConstants.NAME.toString()));
+                currentStudent.setAge(studentResultSet.getByte(StudentConstants.AGE.toString()));
+                currentStudent.setPhoneNo(studentResultSet.getLong(StudentConstants.PHONE_NUMBER.toString()));
+                currentStudent.setGender(studentResultSet.getString(StudentConstants.GENDER.toString()));
                 currentStudent.setAddressList(new ArrayList<>()); // Initialize address list
                 currentStudent.setAdmission(new Admission()); // Initialize admission
                 studentMap.put(currentStudent.getRollNo(),currentStudent);
+                // Set admission details for the current student
+                currentStudent.getAdmission().setCourse(studentResultSet.getString(AdmissionConstants.COURSE.toString()));
+                currentStudent.getAdmission().setSection(studentResultSet.getInt(AdmissionConstants.SECTION.toString()));
+                currentStudent.getAdmission().setAdmissionYear(studentResultSet.getInt(AdmissionConstants.ADMISSION_YEAR.toString()));
             }
 
             // Add address to the current student's address list
             Address address = new Address();
-            address.setCountry(rs.getString(AddressConstants.COUNTRY.toString()));
-            address.setState(rs.getString(AddressConstants.STATE.toString()));
-            address.setCity(rs.getString(AddressConstants.CITY.toString()));
+            address.setCountry(studentResultSet.getString(AddressConstants.COUNTRY.toString()));
+            address.setState(studentResultSet.getString(AddressConstants.STATE.toString()));
+            address.setCity(studentResultSet.getString(AddressConstants.CITY.toString()));
             currentStudent.getAddressList().add(address);
 
-            // Set admission details for the current student
-            currentStudent.getAdmission().setCourse(rs.getString(AdmissionConstants.COURSE.toString()));
-            currentStudent.getAdmission().setSection(rs.getInt(AdmissionConstants.SECTION.toString()));
-            currentStudent.getAdmission().setAdmissionYear(rs.getInt(AdmissionConstants.ADMISSION_YEAR.toString()));
         }
 
         return new ArrayList<>(studentMap.values());

@@ -91,7 +91,7 @@ public class AddressRepositoryImpl implements AddressRepository {
             studentAddressList =  jdbcTemplate.query(LIST_QUERY, new Object[]{studentRollNo}, new AddressRowMapper());
         } catch (DataAccessException e) {
             logger.error("Exception Occurred While Getting Student Address",e);
-            throw new ServerUnavailableException("Error While Feteching Student Data",HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new ServerUnavailableException("Error While Fetching Student Data",HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         if (studentAddressList == null) {
             logger.error("Student With RollNO : {} DoesNot Have Address",studentRollNo);
@@ -103,7 +103,9 @@ public class AddressRepositoryImpl implements AddressRepository {
     public Address getStudentAddressByRollNo(int rollNo, AddressType addressType) throws ServerUnavailableException {
         Address address = null;
         try {
-            address =  jdbcTemplate.queryForObject(SELECT_QUERY, new Object[]{rollNo, addressType.name()}, new AddressRowMapper());
+            address = jdbcTemplate.queryForObject(SELECT_QUERY, new Object[]{rollNo, addressType.toString()}, new AddressRowMapper());
+
+
         } catch (DataAccessException e) {
             logger.error("Error Occurred While Getting Student Address",e);
             throw new ServerUnavailableException("Error Occurred While Getting Student Specific Address",HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

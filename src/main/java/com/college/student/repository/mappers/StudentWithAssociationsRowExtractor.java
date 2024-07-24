@@ -20,6 +20,8 @@ public class StudentWithAssociationsRowExtractor implements ResultSetExtractor<S
         Student student = null;
         List<Address> addresses = new ArrayList<>();
         Admission admission = null;
+        boolean hasAddress = false;
+        boolean hasAdmission = false;
 
         while (rs.next()) {
             if (student == null) {
@@ -31,23 +33,45 @@ public class StudentWithAssociationsRowExtractor implements ResultSetExtractor<S
                 student.setGender(rs.getString(StudentConstants.GENDER.toString()));
             }
 
-            Address address = new Address();
-            address.setCountry(rs.getString(AddressConstants.COUNTRY.toString()));
-            address.setState(rs.getString(AddressConstants.STATE.toString()));
-            address.setCity(rs.getString(AddressConstants.CITY.toString()));
-            addresses.add(address);
+            String country = rs.getString(AddressConstants.COUNTRY.toString());
+            String state = rs.getString(AddressConstants.STATE.toString());
+            String city = rs.getString(AddressConstants.CITY.toString());
 
-            if (admission == null) {
-                admission = new Admission();
-                admission.setCourse(rs.getString(AdmissionConstants.COURSE.toString()));
-                admission.setSection(rs.getInt(AdmissionConstants.SECTION.toString()));
-                admission.setAdmissionYear(rs.getInt(AdmissionConstants.ADMISSION_YEAR.toString()));
+            if (country != null || state != null || city != null) {
+                Address address = new Address();
+                address.setCountry(country);
+                address.setState(state);
+                address.setCity(city);
+                addresses.add(address);
+                hasAddress = true;
+            }
+
+            String course = rs.getString(AdmissionConstants.COURSE.toString());
+            Integer section = rs.getInt(AdmissionConstants.SECTION.toString());
+            Integer admissionYear = rs.getInt(AdmissionConstants.ADMISSION_YEAR.toString());
+
+            if (course != null && section != null && admissionYear != null) {
+                if (admission == null) {
+                    admission = new Admission();
+                    admission.setCourse(course);
+                    admission.setSection(section);
+                    admission.setAdmissionYear(admissionYear);
+                    hasAdmission = true;
+                }
             }
         }
 
         if (student != null) {
-            student.setAddressList(addresses);
-            student.setAdmission(admission);
+            if (hasAddress) {
+                student.setAddressList(addresses);
+            } else {
+                student.setAddressList(null);
+            }
+            if (hasAdmission) {
+                student.setAdmission(admission);
+            } else {
+                student.setAdmission(null);
+            }
         }
 
         return student;

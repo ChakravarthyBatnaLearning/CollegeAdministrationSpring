@@ -4,43 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student List Table</title>
-    <style>
-        /* CSS styles for the table and its rows */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #f61284;
-        }
-
-        tr:hover {
-            background-color: #80ecd8; /* Change background color on hover */
-        }
-
-        /* CSS styles for the table header */
-        th {
-            background-color: #4CAF50; /* Green */
-            color: #030000;
-        }
-        .top-right {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900&display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<div class="top-right">
-    <h4>WelCome : <span id="userNameDisplay"></span></h4><br>
+<!--username display link-->
+<div class="text-end text-info h3">
+    <span id="userNameDisplay"></span>
 </div>
-<h3><a href="AddStudentData.html">Add New Student</a></h3>
+<!--logout link-->
+<div class="text-end h3">
+    <a class="btn btn-danger" href="#" onclick="logout()">Logout</a>
+</div>
+<div class="text-center text-dark h2">
+    Students List
+</div>
+<h3><a class="btn btn-primary" role="button" href="AddStudentData.html">Add New Student</a></h3>
 <br><br>
 <script>
     fetch(`http://localhost:8084/CollegeAdministrationSpring/api/login`)
@@ -51,7 +32,7 @@
         .catch(error => console.error('Error fetching JSON data:', error));
 </script>
 <!--creating the div elements with id attribute ='student-list' used to display the list-->
-<div id="student-list"></div>
+<div class="container" id="student-list"></div>
 <!-- call login servlet --> <!-- and display the userName right-top-->
 <script>
     fetch(`http://localhost:8084/CollegeAdministrationSpring/api/student/list`)
@@ -62,11 +43,11 @@
 
             // Creating a table element dynamically;
             let table = document.createElement('table');
-            table.border = "1";
-
+            table.classList.add('table', 'table-hover');
             //
             // Creating  table header dynamically
             let thead = document.createElement('thead');
+            thead.classList.add('table-primary');
             //creating the table row;
             let headerRow = document.createElement('tr');
             // printing table head,column
@@ -85,6 +66,7 @@
             let tbody = document.createElement('tbody');
             data.forEach(student => {
                 let row = document.createElement('tr');
+                row.classList.add('table-success');
                 row.innerHTML = `
                         <td>${student.rollNo}</td>
                         <td>${student.name}</td>
@@ -92,9 +74,9 @@
                         <td>${student.phoneNo}</td>
                         <td>${student.gender}</td>
                          <td>
-        <a href="UpdateStudentData.html?rollNo=${student.rollNo}">Edit</a> |
-       <a href="#" class="delete-link" data-rollno="${student.rollNo}" data-name="${student.name}" data-age="${student.age}" data-phoneNo="${student.phoneNo}"">Delete</a> |
-        <a href="GetStudentData.html?rollNo=${student.rollNo}">View</a>
+        <a  class="btn btn-primary" role="button" href="UpdateStudentData.html?rollNo=${student.rollNo}">Edit</a> |
+       <a class="btn btn-danger delete-link" role="button" href="#" data-rollNo="${student.rollNo}" data-name="${student.name}" data-age="${student.age}" data-phoneNo="${student.phoneNo}"">Delete</a> |
+        <a class="btn btn-info" role="button" href="GetStudentData.html?rollNo=${student.rollNo}">View</a>
     </td>
                     `;
                 tbody.appendChild(row);  //appending each row to <tbody> element
@@ -107,11 +89,10 @@
             document.querySelectorAll('.delete-link').forEach(link => {
                 link.addEventListener('click', function (event) {
                     event.preventDefault();
-                    const rollNo = this.getAttribute('data-rollno');
+                    const rollNo = this.getAttribute('data-rollNo');
                     const name = this.getAttribute('data-name');
                     const age = this.getAttribute('data-age');
                     const phoneNo = this.getAttribute('data-phoneNo');
-                    const username = this.getAttribute('username');
                     if (confirm(`Are you sure you want to delete student with Roll No : ${rollNo}.    having   Name : ${name}    age : ${age}   phoneNo : ${phoneNo}`)) {
                         window.location.href = "DeleteStudentData.html?rollNo=" + rollNo;
                     }
@@ -119,6 +100,7 @@
             });
         })
         .catch(error => console.error('Error fetching JSON data:', error));
+
     function logout() {
         // Create a form element
         const form = document.createElement('form');
@@ -129,10 +111,6 @@
         form.submit();
     }
 </script>
-<br><br>
-<div style="text-align: center;">
-    <!-- Add an onclick event to trigger the logout function -->
-    <a href="#" onclick="logout()"><h3>Logout</h3></a>
-</div>
+<br>
 </body>
 </html>

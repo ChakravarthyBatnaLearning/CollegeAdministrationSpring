@@ -12,17 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8084")
 // ctrl + alt + O to remove unused imports
-@Controller
+@RestController
 @RequestMapping("/student")
 public class StudentController {
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
+
     private final StudentService studentService;
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
@@ -32,7 +31,6 @@ public class StudentController {
     }
 
     @PostMapping()
-    @ResponseBody
     public Student addStudentData(@RequestBody Student student, HttpServletRequest request) throws DuplicateRollNoFoundException, ServerUnavailableException, DuplicateAdmissionFoundException {
         HttpSession userSession = request.getSession(false);
         String cookieValue = HttpUtil.getCookieByName("my_auth_cookie", request);
@@ -46,7 +44,6 @@ public class StudentController {
     }
 
     @GetMapping("/{rollNo}")
-    @ResponseBody
     public Student getStudentData(HttpServletRequest request, @PathVariable(value = "rollNo") String rollNo)
             throws StudentNotFoundException, ServerUnavailableException {
         Student student = null;
@@ -61,8 +58,7 @@ public class StudentController {
 
     }
 
-    @GetMapping()
-    @ResponseBody
+    @GetMapping("/list")
     public List<Student> getStudentList(@RequestParam(value = "withAssociations", required = false, defaultValue = "false") boolean withAssociations)
             throws ServerUnavailableException {
         List<Student> studentList = null;
@@ -75,7 +71,6 @@ public class StudentController {
     }
 
     @PutMapping()
-    @ResponseBody
     public Student updateStudentData(@RequestBody Student student) throws StudentNotFoundException, ServerUnavailableException, AdmissionRecordNotFoundException, AddressRecordNotFoundException {
         logger.info("Request to Update the Student : {}", student);
         student = studentService.updateStudentDetailsByRollNo(student);
@@ -86,13 +81,11 @@ public class StudentController {
     }
 
     @DeleteMapping("/{rollNo}")
-    @ResponseBody
-    public String deleteStudentData(@PathVariable String rollNo) throws ServerUnavailableException, StudentNotFoundException, AdmissionRecordNotFoundException, AddressRecordNotFoundException {
-        logger.info("Request to Delete Student Successfully Received Student RollNo : {}" ,Integer.parseInt(rollNo));
+    public Student deleteStudentData(@PathVariable String rollNo) throws ServerUnavailableException, StudentNotFoundException, AdmissionRecordNotFoundException, AddressRecordNotFoundException {
+        logger.info("Request to Delete Student Successfully Received Student RollNo : {}", Integer.parseInt(rollNo));
         Student student = studentService.deleteStudentByRollNo(Integer.parseInt(rollNo));
         logger.info("Successfully Deleted the Student : {}", student);
         applicationEventPublisher.publishEvent(new DeleteStudentEvent(this.getClass(), student));
-
-        return rollNo;
+        return student;
     }
 }

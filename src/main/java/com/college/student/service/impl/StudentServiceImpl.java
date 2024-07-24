@@ -49,9 +49,9 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         return this.studentRepository.listStudents(withAssociations);
     }
 
-    public Student deleteStudentByRollNo(int rollNo) throws ServerUnavailableException,
-            StudentNotFoundException, AdmissionRecordNotFoundException, AddressRecordNotFoundException {
-        Student student = getStudentByRollNo(rollNo);
+    public Student deleteStudentByRollNo(int rollNo) throws ServerUnavailableException, StudentNotFoundException,
+            AdmissionRecordNotFoundException, AddressRecordNotFoundException {
+        Student student = getCompleteStudentData(rollNo);
         if (student == null) return null;
         if (student.getAdmission() != null) admissionRepository.deleteStudentAdmission(rollNo);
         if (student.getAddressList() != null) {
@@ -60,7 +60,8 @@ public class StudentServiceImpl implements com.college.student.service.StudentSe
         return this.studentRepository.deleteStudent(rollNo);
     }
 
-    public Student updateStudentDetailsByRollNo(Student updateStudent) throws ServerUnavailableException, StudentNotFoundException, AddressRecordNotFoundException, AdmissionRecordNotFoundException {
+    public Student updateStudentDetailsByRollNo(Student updateStudent) throws ServerUnavailableException,
+            StudentNotFoundException, AddressRecordNotFoundException, AdmissionRecordNotFoundException {
         if (updateStudent.getAddressList() != null) {
             for (Address address : updateStudent.getAddressList()) {
                 addressRepository.updateStudentAddressByRollNo(updateStudent.getRollNo(), address, address.getAddressType());

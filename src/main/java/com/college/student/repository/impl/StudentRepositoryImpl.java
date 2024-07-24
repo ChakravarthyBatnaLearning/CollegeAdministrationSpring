@@ -16,15 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 public class StudentRepositoryImpl implements StudentRepository {
     private static final Logger logger = LoggerFactory.getLogger(StudentRepositoryImpl.class);
 
     private static final String LIST_QUERY = "SELECT ROLL_NO, NAME, AGE, PHONE_NUMBER, GENDER FROM STUDENT";
-    private static final String INSERT_QUERY = "INSERT INTO (ROLL_NO, NAME, AGE, PHONE_NUMBER, GENDER) STUDENT VALUES (?,?,?,?,?)";
+    private static final String INSERT_QUERY = "INSERT INTO STUDENT (ROLL_NO, NAME, AGE, PHONE_NUMBER, GENDER) VALUES (?,?,?,?,?)";
+
     private static final String DELETE_QUERY = "DELETE FROM STUDENT WHERE ROLL_NO = ?";
     private static final String UPDATE_QUERY = "UPDATE STUDENT SET NAME = ?, AGE = ?, PHONE_NUMBER = ?, GENDER = ? WHERE ROLL_NO = ?";
     private static final String GET_QUERY = "SELECT ROLL_NO, NAME, AGE, PHONE_NUMBER, GENDER  FROM student WHERE ROLL_NO = ?";
